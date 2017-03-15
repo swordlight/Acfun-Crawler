@@ -1,14 +1,17 @@
 {
   "name": "acfun-crawler",
   "version": "1.0.0",
-  "description": "",
+  "description": "this is a crawler of acfun info",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "request": "^2.81.0"
+  },
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",
     "babel-core": "^6.23.1",
