@@ -1,16 +1,8 @@
-const http= require ('http')
-const fs= require ('fs')
-const cheerio= require ('cheerio');
-const request= require ('request');
+import http from 'http';
+import cheerio from 'cheerio';
 
-// import http from 'http';
-// import fs from 'fs';
-// import cheerio from 'cheerio';
-// import request from 'request';
 
-let url='http://www.acfun.cn/v/list73/index.htm';
-
-function startRequest(url){
+export default function(url,response){
     http.get(url,function(res){ //发送get请求
         let html='';
         let articles=[];
@@ -42,9 +34,7 @@ function startRequest(url){
                 }
                 articles.push(article);
             });
-            console.log(articles);
+            response.send(articles); //返回数据
         })
     })
 }
-
-startRequest(url);
