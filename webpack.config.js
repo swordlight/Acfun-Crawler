@@ -1,52 +1,96 @@
+var path=require('path');
+var ExtractTextPlugin=require('extract-text-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+
+let extract_css = new ExtractTextPlugin('css/[name].css'); //css抽取
+let extract_vue_css = new ExtractTextPlugin('css/[name].vue.css');
 
 var option = {
-    // entry: entry,
-    // output: {
-    //     path: path.resolve('./web/dist'),
-    //     publicPath: 'dist/',
-    //     filename: 'js/[name].js'
-    // },
+    entry: {
+        login:'./web/src/pages/login/index.js',
+        main: './web/src/pages/main/index.js'
+    },
+    output: {
+        path: path.resolve('./web/dist'),
+        publicPath: 'dist/',
+        filename: 'js/[name].bundle.js'
+    },
     cache: true,
     devtool: 'source-map',
     resolve: {
-        extensions: ['', '.js', '.vue']
+        extensions: ['.js', '.vue','.css','less','html','png','jpg'],
+        // alias: {
+        //     'vue': 'vue/dist/vue.js'
+        // }
     },
     module: {
-        loaders: [{
-            test: /\.vue$/,
-            loader: 'vue'
-        }, {
-            test: /\.js$/,
-            loader: 'babel',
-            query: {
-                presets: ['es2015']
+        loaders: [
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader'
             },
-            exclude: /node_modules/
-        }, {
-            test: /\.(?:jpg|gif|png)$/,
-            loader: 'file?name=img/[name].[hash:6].[ext]'
-        }, {
-            test: /\.css$/,
-            loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
-        }]
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                include: [path.resolve('./web/src')],
+                query: {
+                    presets: ['es2015', 'stage-0']
+                },
+                exclude: /node_modules/
+            },
+            {
+                test: /\.css$/,
+                loader: extract_css.extract('style-loader','css-loader','autoprefixer-loader')
+            },
+            {
+                test: /\.less$/,
+                loader: extract_css.extract('style-loader','css-loader','less-loader','autoprefixer-loader')
+            },
+            {
+                test: /\.(?:jpg|png|gif)$/,
+                loader: 'file-loader?name=./img/[name].[hash:6].[ext]'
+            },
+            {
+                test: /\.(woff|woff2|svg|eot|ttf)\??.*$/,
+                loader: 'file-loader?name=./iconfont/[name].[hash:6].[ext]'
+            }
+        ]
     },
-    plugins: [
-        new ExtractTextPlugin('css/main.css'),
+    vue:{  //抽取vue组件中css
+        loaders: [
+            {
+                css: extract_vue_css.extract('vue-style-loader', 'css-loader')
+            },
+            {
+                less: extract_vue_css.extract('vue-style-loader', 'css-loader', 'less-loader')
+            }
+        ]
+    },
+    plugin:[
+        extract_css,
+        extract_vue_css,
+        
         new HtmlWebpackPlugin({
-            filename: '../main.html',
-            template: './web/src/main.html',
-            inject: true,
-            hash: true
+            title:'login',
+            filename:'login.html',
+            template:'./web/src/login.html',
+            chunks: ['login'],
+            hash:true,
+            inject:true
+        }),
+        new HtmlWebpackPlugin({
+            title:'main',
+            filename:'main.html',
+            template:'./web/src/main.html',
+            chunks:['main'],
+            hash:true,
+            inject:true
         })
-    ],
-    vue: {
-        loaders: {
-            css: ExtractTextPlugin.extract('css')
-        }
-    }
+
+    ]
 }
 
-if (process.env.NODE_ENV == 'production') {
+if (process.env.NODE_ENV === 'production') {
     option.devtool = false
 }
 
