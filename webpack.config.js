@@ -24,10 +24,14 @@ var option = {
         // }
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.vue$/,
-                loader: 'vue-loader'
+                loader: 'vue-loader',
+                options:{
+                    less:extract_vue_css.extract({use:['vue-style-loader', 'css-loader', 'less-loader']}),
+                    css:extract_vue_css.extract({use:['vue-style-loader', 'css-loader']})
+                }
             },
             {
                 test: /\.js$/,
@@ -40,11 +44,11 @@ var option = {
             },
             {
                 test: /\.css$/,
-                loader: extract_css.extract('style-loader','css-loader','autoprefixer-loader')
+                loader: extract_css.extract({use:['style-loader','css-loader','autoprefixer-loader']})
             },
             {
                 test: /\.less$/,
-                loader: extract_css.extract('style-loader','css-loader','less-loader','autoprefixer-loader')
+                loader: extract_css.extract({use:['style-loader','css-loader','less-loader','autoprefixer-loader']})
             },
             {
                 test: /\.(?:jpg|png|gif)$/,
@@ -56,23 +60,13 @@ var option = {
             }
         ]
     },
-    vue:{  //抽取vue组件中css
-        loaders: [
-            {
-                css: extract_vue_css.extract('vue-style-loader', 'css-loader')
-            },
-            {
-                less: extract_vue_css.extract('vue-style-loader', 'css-loader', 'less-loader')
-            }
-        ]
-    },
-    plugin:[
+    plugins:[
         extract_css,
         extract_vue_css,
         
         new HtmlWebpackPlugin({
             title:'login',
-            filename:'login.html',
+            filename:'../login.html',
             template:'./web/src/login.html',
             chunks: ['login'],
             hash:true,
@@ -80,7 +74,7 @@ var option = {
         }),
         new HtmlWebpackPlugin({
             title:'main',
-            filename:'main.html',
+            filename:'../main.html',
             template:'./web/src/main.html',
             chunks:['main'],
             hash:true,
