@@ -2,8 +2,8 @@ var path=require('path');
 var ExtractTextPlugin=require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-let extract_css = new ExtractTextPlugin('css/[name].css'); //css抽取
-let extract_vue_css = new ExtractTextPlugin('css/[name].vue.css');
+let extract_css = new ExtractTextPlugin('./web/dist/css/[name].css'); //css抽取
+let extract_vue_css = new ExtractTextPlugin('./web/dist/css/vue/[name].vue.css');
 
 var option = {
     entry: {

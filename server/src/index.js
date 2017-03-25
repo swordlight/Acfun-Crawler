@@ -1,10 +1,10 @@
 import express from 'express';
 import crawler from './crawler';
+import path from 'path';
 let app=express();
 
-app.get('/',function(require,response){
-    crawler('http://www.acfun.cn/v/list110/index.htm',response);
-});
+
+app.use(express.static(path.join(__dirname, '../../web'))); //将web的页面设为静态资源可直接访问
 
 var server=app.listen(3000,function(){
     var host=server.address().address;
