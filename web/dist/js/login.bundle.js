@@ -63,65 +63,11 @@
 /******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 19);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  scopeId,
-  cssModules
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  // inject cssModules
-  if (cssModules) {
-    var computed = Object.create(options.computed || null)
-    Object.keys(cssModules).forEach(function (key) {
-      var module = cssModules[key]
-      computed[key] = function () { return module }
-    })
-    options.computed = computed
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports) {
 
 /*
@@ -177,6 +123,60 @@ module.exports = function() {
 
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  scopeId,
+  cssModules
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  // inject cssModules
+  if (cssModules) {
+    var computed = Object.create(options.computed || null)
+    Object.keys(cssModules).forEach(function (key) {
+      var module = cssModules[key]
+      computed[key] = function () { return module }
+    })
+    options.computed = computed
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -196,7 +196,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(18)
+var listToStyles = __webpack_require__(21)
 
 /*
 type StyleObject = {
@@ -416,21 +416,27 @@ function applyToTag (styleElement, obj) {
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__.p + "./img/logo_icon.2f0782.png";
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
 
 /* styles */
-__webpack_require__(16)
+__webpack_require__(19)
 
-var Component = __webpack_require__(0)(
+var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(6),
+  __webpack_require__(7),
   /* template */
-  __webpack_require__(13),
+  __webpack_require__(16),
   /* scopeId */
-  "data-v-15d41281",
+  "data-v-0eca552b",
   /* cssModules */
   null
 )
-Component.options.__file = "F:\\html\\Acfun-Crawler\\web\\src\\pages\\login\\app.vue"
+Component.options.__file = "F:\\html\\blog\\web\\src\\pages\\login\\app.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] app.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -441,47 +447,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-15d41281", Component.options)
+    hotAPI.createRecord("data-v-0eca552b", Component.options)
   } else {
-    hotAPI.reload("data-v-15d41281", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-/* styles */
-__webpack_require__(17)
-
-var Component = __webpack_require__(0)(
-  /* script */
-  __webpack_require__(7),
-  /* template */
-  __webpack_require__(14),
-  /* scopeId */
-  "data-v-702e31c9",
-  /* cssModules */
-  null
-)
-Component.options.__file = "F:\\html\\Acfun-Crawler\\web\\src\\pages\\login\\login.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] login.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-702e31c9", Component.options)
-  } else {
-    hotAPI.reload("data-v-702e31c9", Component.options)
+    hotAPI.reload("data-v-0eca552b", Component.options)
   }
 })()}
 
@@ -494,19 +462,57 @@ module.exports = Component.exports
 
 
 /* styles */
-__webpack_require__(22)
+__webpack_require__(18)
 
-var Component = __webpack_require__(0)(
+var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(8),
   /* template */
   __webpack_require__(15),
   /* scopeId */
-  "data-v-f44c4118",
+  "data-v-049e71f3",
   /* cssModules */
   null
 )
-Component.options.__file = "F:\\html\\Acfun-Crawler\\web\\src\\pages\\login\\reg.vue"
+Component.options.__file = "F:\\html\\blog\\web\\src\\pages\\login\\login.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] login.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-049e71f3", Component.options)
+  } else {
+    hotAPI.reload("data-v-049e71f3", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(20)
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(9),
+  /* template */
+  __webpack_require__(17),
+  /* scopeId */
+  "data-v-7ed0221e",
+  /* cssModules */
+  null
+)
+Component.options.__file = "F:\\html\\blog\\web\\src\\pages\\login\\reg.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] reg.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -517,9 +523,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-f44c4118", Component.options)
+    hotAPI.createRecord("data-v-7ed0221e", Component.options)
   } else {
-    hotAPI.reload("data-v-f44c4118", Component.options)
+    hotAPI.reload("data-v-7ed0221e", Component.options)
   }
 })()}
 
@@ -527,7 +533,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -556,7 +562,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = {};
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -603,7 +609,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -612,21 +618,12 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
+var _util = __webpack_require__(10);
+
+var _util2 = _interopRequireDefault(_util);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
     data: function data() {
@@ -639,74 +636,105 @@ exports.default = {
 
     methods: {
         reg: function reg() {
-            return;
+            _util2.default.request('reg', { username: this.name, userpassword: this.password }, function (data) {
+                alert(data.msg);
+            });
         }
     }
-};
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.content[data-v-15d41281] {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.content header[data-v-15d41281] {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.content article[data-v-15d41281] {\n  height: 400px;\n  width: 980px;\n  margin: auto;\n  margin-top: 100px;\n}\n.content article .login-img[data-v-15d41281] {\n  float: left;\n  width: 420px;\n  height: 320px;\n  background: url(" + __webpack_require__(11) + ");\n  background-size: 100% 100%;\n  background-repeat: no-repeat;\n  box-shadow: 0 0 70px 10px #f9f9f9 inset;\n}\n.content article .login-reg[data-v-15d41281] {\n  float: right;\n  width: 40%;\n}\n", "", {"version":3,"sources":["F:/html/Acfun-Crawler/web/src/pages/login/app.vue"],"names":[],"mappings":";AAAA;EACE,mBAAmB;EACnB,YAAY;EACZ,aAAa;CACd;AACD;EACE,YAAY;EACZ,aAAa;EACb,iCAAiC;CAClC;AACD;EACE,cAAc;EACd,aAAa;EACb,aAAa;EACb,kBAAkB;CACnB;AACD;EACE,YAAY;EACZ,aAAa;EACb,cAAc;EACd,0CAAyD;EACzD,2BAA2B;EAC3B,6BAA6B;EAC7B,wCAAwC;CACzC;AACD;EACE,aAAa;EACb,WAAW;CACZ","file":"app.vue","sourcesContent":[".content {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.content header {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.content article {\n  height: 400px;\n  width: 980px;\n  margin: auto;\n  margin-top: 100px;\n}\n.content article .login-img {\n  float: left;\n  width: 420px;\n  height: 320px;\n  background: url('../../../assets/img/login-420-320.jpg');\n  background-size: 100% 100%;\n  background-repeat: no-repeat;\n  box-shadow: 0 0 70px 10px #f9f9f9 inset;\n}\n.content article .login-reg {\n  float: right;\n  width: 40%;\n}\n"],"sourceRoot":""}]);
-
-// exports
-
+}; //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
-// imports
+"use strict";
 
 
-// module
-exports.push([module.i, "\nheader[data-v-702e31c9] {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top[data-v-702e31c9] {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url(" + __webpack_require__(12) + ");\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main[data-v-702e31c9] {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name[data-v-702e31c9] {\n  margin-bottom: 20px;\n}\n.buttons[data-v-702e31c9] {\n  width: 80%;\n  height: auto;\n  margin: auto;\n}\n.buttons .login[data-v-702e31c9] {\n  float: left;\n  width: 40%;\n  background-color: #67BDCD;\n  border-radius: 0;\n  border: none;\n}\n.buttons .reg[data-v-702e31c9] {\n  float: right;\n  width: 40%;\n  background-color: white;\n  border-radius: 0;\n  border: 1px #BBBBBB solid;\n  color: #666;\n}\n.footer[data-v-702e31c9] {\n  width: 80%;\n  margin: auto;\n  margin-top: 80px;\n  text-align: right;\n}\n", "", {"version":3,"sources":["F:/html/Acfun-Crawler/web/src/pages/login/login.vue"],"names":[],"mappings":";AAAA;EACE,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;CACxB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,0CAAqD;EACrD,gCAAgC;EAChC,6BAA6B;EAC7B,gBAAgB;EAChB,kBAAkB;EAClB,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;CACd;AACD;EACE,YAAY;EACZ,WAAW;EACX,0BAA0B;EAC1B,iBAAiB;EACjB,aAAa;CACd;AACD;EACE,aAAa;EACb,WAAW;EACX,wBAAwB;EACxB,iBAAiB;EACjB,0BAA0B;EAC1B,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,kBAAkB;CACnB","file":"login.vue","sourcesContent":["header {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url('../../../assets/img/logo_icon.png');\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name {\n  margin-bottom: 20px;\n}\n.buttons {\n  width: 80%;\n  height: auto;\n  margin: auto;\n}\n.buttons .login {\n  float: left;\n  width: 40%;\n  background-color: #67BDCD;\n  border-radius: 0;\n  border: none;\n}\n.buttons .reg {\n  float: right;\n  width: 40%;\n  background-color: white;\n  border-radius: 0;\n  border: 1px #BBBBBB solid;\n  color: #666;\n}\n.footer {\n  width: 80%;\n  margin: auto;\n  margin-top: 80px;\n  text-align: right;\n}\n"],"sourceRoot":""}]);
-
-// exports
-
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    request: function request(url, data, fn) {
+        url = 'http://localhost:3000/' + url;
+        data = JSON.stringify(data); //转为json
+        var obj = new XMLHttpRequest();
+        obj.open("POST", url, true);
+        obj.setRequestHeader("Content-type", "application/json;charset=utf-8"); // 发送信息至服务器时内容编码类型
+        obj.onreadystatechange = function () {
+            if (obj.readyState == 4 && (obj.status == 200 || obj.status == 304)) {
+                // 304未修改                
+                var responseText = JSON.parse(obj.responseText);
+                fn(responseText); //解析json
+            }
+        };
+        obj.send(data);
+    }
+};
 
 /***/ }),
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "./img/login-420-320.6991e9.jpg";
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, "\nheader[data-v-049e71f3] {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top[data-v-049e71f3] {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url(" + __webpack_require__(3) + ");\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main[data-v-049e71f3] {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name[data-v-049e71f3] {\n  margin-bottom: 20px;\n}\n.buttons[data-v-049e71f3] {\n  width: 80%;\n  height: auto;\n  margin: auto;\n}\n.buttons .login[data-v-049e71f3] {\n  float: left;\n  width: 40%;\n  background-color: #67BDCD;\n  border-radius: 0;\n  border: none;\n}\n.buttons .reg[data-v-049e71f3] {\n  float: right;\n  width: 40%;\n  background-color: white;\n  border-radius: 0;\n  border: 1px #BBBBBB solid;\n  color: #666;\n}\n.footer[data-v-049e71f3] {\n  width: 80%;\n  margin: auto;\n  margin-top: 80px;\n  text-align: right;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/login.vue"],"names":[],"mappings":";AAAA;EACE,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;CACxB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,0CAAqD;EACrD,gCAAgC;EAChC,6BAA6B;EAC7B,gBAAgB;EAChB,kBAAkB;EAClB,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;CACd;AACD;EACE,YAAY;EACZ,WAAW;EACX,0BAA0B;EAC1B,iBAAiB;EACjB,aAAa;CACd;AACD;EACE,aAAa;EACb,WAAW;EACX,wBAAwB;EACxB,iBAAiB;EACjB,0BAA0B;EAC1B,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,kBAAkB;CACnB","file":"login.vue","sourcesContent":["header {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url('../../../assets/img/logo_icon.png');\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name {\n  margin-bottom: 20px;\n}\n.buttons {\n  width: 80%;\n  height: auto;\n  margin: auto;\n}\n.buttons .login {\n  float: left;\n  width: 40%;\n  background-color: #67BDCD;\n  border-radius: 0;\n  border: none;\n}\n.buttons .reg {\n  float: right;\n  width: 40%;\n  background-color: white;\n  border-radius: 0;\n  border: 1px #BBBBBB solid;\n  color: #666;\n}\n.footer {\n  width: 80%;\n  margin: auto;\n  margin-top: 80px;\n  text-align: right;\n}\n"],"sourceRoot":""}]);
+
+// exports
+
 
 /***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "./img/logo_icon.2f0782.png";
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.content[data-v-0eca552b] {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.content header[data-v-0eca552b] {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.content article[data-v-0eca552b] {\n  height: 400px;\n  width: 980px;\n  margin: auto;\n  margin-top: 100px;\n}\n.content article .login-img[data-v-0eca552b] {\n  float: left;\n  width: 420px;\n  height: 320px;\n  background: url(" + __webpack_require__(14) + ");\n  background-size: 100% 100%;\n  background-repeat: no-repeat;\n  box-shadow: 0 0 70px 10px #f9f9f9 inset;\n}\n.content article .login-reg[data-v-0eca552b] {\n  float: right;\n  width: 40%;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/app.vue"],"names":[],"mappings":";AAAA;EACE,mBAAmB;EACnB,YAAY;EACZ,aAAa;CACd;AACD;EACE,YAAY;EACZ,aAAa;EACb,iCAAiC;CAClC;AACD;EACE,cAAc;EACd,aAAa;EACb,aAAa;EACb,kBAAkB;CACnB;AACD;EACE,YAAY;EACZ,aAAa;EACb,cAAc;EACd,0CAAyD;EACzD,2BAA2B;EAC3B,6BAA6B;EAC7B,wCAAwC;CACzC;AACD;EACE,aAAa;EACb,WAAW;CACZ","file":"app.vue","sourcesContent":[".content {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.content header {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.content article {\n  height: 400px;\n  width: 980px;\n  margin: auto;\n  margin-top: 100px;\n}\n.content article .login-img {\n  float: left;\n  width: 420px;\n  height: 320px;\n  background: url('../../../assets/img/login-420-320.jpg');\n  background-size: 100% 100%;\n  background-repeat: no-repeat;\n  box-shadow: 0 0 70px 10px #f9f9f9 inset;\n}\n.content article .login-reg {\n  float: right;\n  width: 40%;\n}\n"],"sourceRoot":""}]);
+
+// exports
+
 
 /***/ }),
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "content"
-  }, [_c('header'), _vm._v(" "), _c('article', [_c('div', {
-    staticClass: "login-img"
-  }), _vm._v(" "), _c('div', {
-    staticClass: "login-reg"
-  }, [_c('router-view')], 1)]), _vm._v(" "), _c('footer')])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-15d41281", module.exports)
-  }
-}
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, "\nheader[data-v-7ed0221e] {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top[data-v-7ed0221e] {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url(" + __webpack_require__(3) + ");\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main[data-v-7ed0221e] {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name[data-v-7ed0221e] {\n  margin-bottom: 20px;\n}\n.main .password[data-v-7ed0221e] {\n  margin-bottom: 20px;\n}\n.buttons[data-v-7ed0221e] {\n  width: 80%;\n  height: auto;\n  margin: auto;\n  text-align: center;\n}\n.buttons .reg[data-v-7ed0221e] {\n  width: 90%;\n  background-color: #67BDCD;\n  border-radius: 6px;\n  border: none;\n  color: white;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/reg.vue"],"names":[],"mappings":";AAAA;EACE,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;CACxB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,0CAAqD;EACrD,gCAAgC;EAChC,6BAA6B;EAC7B,gBAAgB;EAChB,kBAAkB;EAClB,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,mBAAmB;CACpB;AACD;EACE,WAAW;EACX,0BAA0B;EAC1B,mBAAmB;EACnB,aAAa;EACb,aAAa;CACd","file":"reg.vue","sourcesContent":["header {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url('../../../assets/img/logo_icon.png');\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name {\n  margin-bottom: 20px;\n}\n.main .password {\n  margin-bottom: 20px;\n}\n.buttons {\n  width: 80%;\n  height: auto;\n  margin: auto;\n  text-align: center;\n}\n.buttons .reg {\n  width: 90%;\n  background-color: #67BDCD;\n  border-radius: 6px;\n  border: none;\n  color: white;\n}\n"],"sourceRoot":""}]);
+
+// exports
+
 
 /***/ }),
 /* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "./img/login-420-320.6991e9.jpg";
+
+/***/ }),
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -773,12 +801,33 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-702e31c9", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-049e71f3", module.exports)
   }
 }
 
 /***/ }),
-/* 15 */
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "content"
+  }, [_c('header'), _vm._v(" "), _c('article', [_c('div', {
+    staticClass: "login-img"
+  }), _vm._v(" "), _c('div', {
+    staticClass: "login-reg"
+  }, [_c('router-view')], 1)]), _vm._v(" "), _c('footer')])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-0eca552b", module.exports)
+  }
+}
+
+/***/ }),
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -841,64 +890,90 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-f44c4118", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-7ed0221e", module.exports)
   }
 }
 
 /***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(9);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(2)("7095597b", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js?sourceMap!../../../../node_modules/vue-loader/lib/style-rewriter.js?{\"id\":\"data-v-15d41281\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../node_modules/less-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./app.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js?sourceMap!../../../../node_modules/vue-loader/lib/style-rewriter.js?{\"id\":\"data-v-15d41281\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../node_modules/less-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./app.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(10);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(2)("7fc87c21", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js?sourceMap!../../../../node_modules/vue-loader/lib/style-rewriter.js?{\"id\":\"data-v-702e31c9\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../node_modules/less-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./login.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js?sourceMap!../../../../node_modules/vue-loader/lib/style-rewriter.js?{\"id\":\"data-v-702e31c9\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../node_modules/less-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./login.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
 /* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(11);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("fa79092c", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js?sourceMap!../../../../node_modules/vue-loader/lib/style-rewriter.js?{\"id\":\"data-v-049e71f3\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../node_modules/less-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./login.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js?sourceMap!../../../../node_modules/vue-loader/lib/style-rewriter.js?{\"id\":\"data-v-049e71f3\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../node_modules/less-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./login.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(12);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("77a5eec6", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js?sourceMap!../../../../node_modules/vue-loader/lib/style-rewriter.js?{\"id\":\"data-v-0eca552b\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../node_modules/less-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./app.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js?sourceMap!../../../../node_modules/vue-loader/lib/style-rewriter.js?{\"id\":\"data-v-0eca552b\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../node_modules/less-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./app.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(13);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("cb9c5070", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js?sourceMap!../../../../node_modules/vue-loader/lib/style-rewriter.js?{\"id\":\"data-v-7ed0221e\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../node_modules/less-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./reg.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js?sourceMap!../../../../node_modules/vue-loader/lib/style-rewriter.js?{\"id\":\"data-v-7ed0221e\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../node_modules/less-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./reg.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports) {
 
 /**
@@ -931,13 +1006,13 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _app = __webpack_require__(3);
+var _app = __webpack_require__(4);
 
 var _app2 = _interopRequireDefault(_app);
 
@@ -948,7 +1023,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Vue.use(VueRouter); //调用vuerouter
 
 var routes = [//创建路由
-{ path: '/login', component: __webpack_require__(4) }, { path: '/reg', component: __webpack_require__(5) }, { path: '/', redirect: '/login' }];
+{ path: '/login', component: __webpack_require__(5) }, { path: '/reg', component: __webpack_require__(6) }, { path: '/', redirect: '/login' }];
 
 var router = new VueRouter({ //创建router实例
     routes: routes
@@ -962,47 +1037,6 @@ var app = new Vue({
         App: _app2.default
     }
 });
-
-/***/ }),
-/* 20 */,
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1)();
-// imports
-
-
-// module
-exports.push([module.i, "\nheader[data-v-f44c4118] {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top[data-v-f44c4118] {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url(" + __webpack_require__(12) + ");\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main[data-v-f44c4118] {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name[data-v-f44c4118] {\n  margin-bottom: 20px;\n}\n.main .password[data-v-f44c4118] {\n  margin-bottom: 20px;\n}\n.buttons[data-v-f44c4118] {\n  width: 80%;\n  height: auto;\n  margin: auto;\n  text-align: center;\n}\n.buttons .reg[data-v-f44c4118] {\n  width: 90%;\n  background-color: #67BDCD;\n  border-radius: 6px;\n  border: none;\n  color: white;\n}\n", "", {"version":3,"sources":["F:/html/Acfun-Crawler/web/src/pages/login/reg.vue"],"names":[],"mappings":";AAAA;EACE,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;CACxB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,0CAAqD;EACrD,gCAAgC;EAChC,6BAA6B;EAC7B,gBAAgB;EAChB,kBAAkB;EAClB,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,mBAAmB;CACpB;AACD;EACE,WAAW;EACX,0BAA0B;EAC1B,mBAAmB;EACnB,aAAa;EACb,aAAa;CACd","file":"reg.vue","sourcesContent":["header {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url('../../../assets/img/logo_icon.png');\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name {\n  margin-bottom: 20px;\n}\n.main .password {\n  margin-bottom: 20px;\n}\n.buttons {\n  width: 80%;\n  height: auto;\n  margin: auto;\n  text-align: center;\n}\n.buttons .reg {\n  width: 90%;\n  background-color: #67BDCD;\n  border-radius: 6px;\n  border: none;\n  color: white;\n}\n"],"sourceRoot":""}]);
-
-// exports
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(21);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(2)("00300db5", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js?sourceMap!../../../../node_modules/vue-loader/lib/style-rewriter.js?{\"id\":\"data-v-f44c4118\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../node_modules/less-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./reg.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js?sourceMap!../../../../node_modules/vue-loader/lib/style-rewriter.js?{\"id\":\"data-v-f44c4118\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../node_modules/less-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./reg.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
 
 /***/ })
 /******/ ]);

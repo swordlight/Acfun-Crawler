@@ -14,6 +14,7 @@
     </div>
 </template>
 <script>
+    import util from '../../lib/util';
     export default{
         data(){
             return{
@@ -24,7 +25,9 @@
         },
         methods:{
             reg(){
-                return;
+                util.request('reg',{username:this.name,userpassword:this.password},function(data){
+                    alert(data.msg);
+                })
             }
         }
     }
