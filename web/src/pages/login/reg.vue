@@ -4,9 +4,17 @@
             <div class="top">注册AcFun-Crawler</div>
         </header>
         <div class="main">
-            <el-input class="name" v-model="name" placeholder="请输入账号"></el-input>
-            <el-input class="password" v-model="password" placeholder="请输入密码"></el-input>
-            <el-input class="check-password" v-model="check_password" placeholder="请再次输入密码"></el-input>
+            <el-form :model="regrule" :rules="rule" ref="regrule" label-width="100px" class="demo-ruleForm">
+                <el-form-item prop="name">
+                    <el-input type="text" v-model="regrule.name" auto-complete="off" placeholder="请输入用户名" :autofocus="true"></el-input>
+                </el-form-item>
+                <el-form-item prop="password">
+                    <el-input type="password" v-model="regrule.password" auto-complete="off" placeholder="请输入密码"></el-input>
+                </el-form-item>
+                <el-form-item prop="check_password">
+                    <el-input type="password" v-model="regrule.check_password" auto-complete="off" placeholder="请再次输入密码确认"></el-input>
+                </el-form-item>
+            </el-form>
         </div>
         <div class="buttons">
             <el-button class="reg" type="primary" size="large" @click="reg">注册</el-button>
@@ -17,16 +25,81 @@
     import util from '../../lib/util';
     export default{
         data(){
+            var name=(rule,value,callback)=>{
+                if(value===''){
+                    callback(new Error('请输入用户名'))
+                }else{
+                    if(/\s/g.test(value)){
+                        callback(new Error('非法字符'));
+                    }
+                    callback();
+                }
+            };
+            var password=(rule,value,callback)=>{
+                if(value===''){
+                    callback(new Error('请输入密码'))
+                }else{
+                    if(/\s/g.test(value)){
+                        callback(new Error('非法字符'));
+                    }
+                    callback();
+                }
+            };
+            var check_password=(rule,value,callback)=>{
+                if(value===''){
+                    callback(new Error('请再次输入密码'))
+                }else{
+                    if(value!==this.regrule.password){
+                        callback(new Error('两次输入密码不一致'));
+                    }
+                    callback();
+                }
+            };
             return{
-                name:'',
-                password:'',
-                check_password:''
+                regrule:{
+                    name:'',
+                    password:'',
+                    check_password:''
+                },
+                rule:{
+                    name:[
+                        {validator:name,trigger:'blur'}
+                    ],
+                    password:[
+                        {validator:password,trigger:'blur'}
+                    ],
+                    check_password:[
+                        {validator:check_password,trigger:'blur'}
+                    ]
+                }
             }
         },
         methods:{
             reg(){
-                util.request('reg',{username:this.name,userpassword:this.password},function(data){
-                    alert(data.msg);
+                var self=this;
+                this.$refs.regrule.validate((valid)=>{
+                    if(valid){
+                        util.request('reg',this.regrule,function(data){
+                            if(data.state===301){
+                                self.$message({
+                                    showClose: true,
+                                    message: '账号已存在',
+                                    type: 'error'
+                                });
+                                self.$refs.regrule.resetFields();  //重置表单
+                            }else{
+                                if(data.state===200){
+                                    self.$message({
+                                        showClose: true,
+                                        message: '注册成功',
+                                        type: 'success'
+                                    });
+                                }
+                            }
+                        })
+                    }else{
+                        return false;
+                    };
                 })
             }
         }

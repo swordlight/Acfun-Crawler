@@ -4,8 +4,14 @@
             <div class="top">登录AcFun-Crawler</div>
         </header>
         <div class="main">
-            <el-input class="name" v-model="name" placeholder="请输入账号" :autofocus="true"></el-input>
-            <el-input class="password" v-model="password" placeholder="请输入密码"></el-input>
+            <el-form :model="loginrule" :rules="rule" ref="loginrule" label-width="100px" class="demo-ruleForm">
+                <el-form-item prop="name">
+                    <el-input type="text" v-model="loginrule.name" auto-complete="off" placeholder="请输入用户名" :autofocus="true"></el-input>
+                </el-form-item>
+                <el-form-item prop="password">
+                    <el-input type="password" v-model="loginrule.password" auto-complete="off" placeholder="请输入密码"></el-input>
+                </el-form-item>
+            </el-form>
         </div>
         <div class="buttons">
             <el-button class="login" type="primary" size="large" @click="login">登录</el-button>
@@ -17,16 +23,72 @@
     </div>
 </template>
 <script>
+    import util from '../../lib/util'
     export default{
         data(){
+            var name=(rule,value,callback)=>{
+                if(value===''){
+                    callback(new Error('请输入用户名'));
+                }else{
+                    callback();
+                }
+            };
+            var password=(rule,value,callback)=>{
+                if(value===''){
+                    callback(new Error('请输入密码'));
+                }else{
+                    callback();
+                }
+            }
             return{
-                name:'',
-                password:''
+                loginrule:{
+                    name:'',
+                    password:''
+                },
+                rule:{
+                    name:[
+                        {validator:name,trigger:'blur'}
+                    ],
+                    password:[
+                        {validator:password,trigger:'blur'}
+                    ]
+                }
             }
         },
         methods:{
             login(){
-                return;
+                var self=this;
+                this.$refs.loginrule.validate((valid)=>{
+                    if(valid){
+                        util.request('login',this.loginrule,function(data){
+                            switch (data.state) {
+                                case 301:
+                                self.$message({
+                                    showClose: true,
+                                    message: '用户名不存在',
+                                    type: 'error'
+                                });
+                                break;
+                                case 302:
+                                self.$message({
+                                    showClose: true,
+                                    message: '密码错误',
+                                    type: 'error'
+                                });
+                                break;
+                                case 200:
+                                self.$message({
+                                    showClose: true,
+                                    message: '登陆成功',
+                                    type: 'success'
+                                });
+                                break;
+                                default:
+                                break;
+                            }
+                        })
+                    }
+                })
             },
             reg(){
                 this.$router.push({path:'reg'})

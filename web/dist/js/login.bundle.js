@@ -571,42 +571,106 @@ exports.default = {};
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
+var _util = __webpack_require__(10);
+
+var _util2 = _interopRequireDefault(_util);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
     data: function data() {
+        var name = function name(rule, value, callback) {
+            if (value === '') {
+                callback(new Error('请输入用户名'));
+            } else {
+                callback();
+            }
+        };
+        var password = function password(rule, value, callback) {
+            if (value === '') {
+                callback(new Error('请输入密码'));
+            } else {
+                callback();
+            }
+        };
         return {
-            name: '',
-            password: ''
+            loginrule: {
+                name: '',
+                password: ''
+            },
+            rule: {
+                name: [{ validator: name, trigger: 'blur' }],
+                password: [{ validator: password, trigger: 'blur' }]
+            }
         };
     },
 
     methods: {
         login: function login() {
-            return;
+            var _this = this;
+
+            var self = this;
+            this.$refs.loginrule.validate(function (valid) {
+                if (valid) {
+                    _util2.default.request('login', _this.loginrule, function (data) {
+                        switch (data.state) {
+                            case 301:
+                                self.$message({
+                                    showClose: true,
+                                    message: '用户名不存在',
+                                    type: 'error'
+                                });
+                                break;
+                            case 302:
+                                self.$message({
+                                    showClose: true,
+                                    message: '密码错误',
+                                    type: 'error'
+                                });
+                                break;
+                            case 200:
+                                self.$message({
+                                    showClose: true,
+                                    message: '登陆成功',
+                                    type: 'success'
+                                });
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+                }
+            });
         },
         reg: function reg() {
             this.$router.push({ path: 'reg' });
         }
     }
-};
+}; //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /***/ }),
 /* 9 */
@@ -627,21 +691,92 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = {
     data: function data() {
+        var _this = this;
+
+        var name = function name(rule, value, callback) {
+            if (value === '') {
+                callback(new Error('请输入用户名'));
+            } else {
+                if (/\s/g.test(value)) {
+                    callback(new Error('非法字符'));
+                }
+                callback();
+            }
+        };
+        var password = function password(rule, value, callback) {
+            if (value === '') {
+                callback(new Error('请输入密码'));
+            } else {
+                if (/\s/g.test(value)) {
+                    callback(new Error('非法字符'));
+                }
+                callback();
+            }
+        };
+        var check_password = function check_password(rule, value, callback) {
+            if (value === '') {
+                callback(new Error('请再次输入密码'));
+            } else {
+                if (value !== _this.regrule.password) {
+                    callback(new Error('两次输入密码不一致'));
+                }
+                callback();
+            }
+        };
         return {
-            name: '',
-            password: '',
-            check_password: ''
+            regrule: {
+                name: '',
+                password: '',
+                check_password: ''
+            },
+            rule: {
+                name: [{ validator: name, trigger: 'blur' }],
+                password: [{ validator: password, trigger: 'blur' }],
+                check_password: [{ validator: check_password, trigger: 'blur' }]
+            }
         };
     },
 
     methods: {
         reg: function reg() {
-            _util2.default.request('reg', { username: this.name, userpassword: this.password }, function (data) {
-                alert(data.msg);
+            var _this2 = this;
+
+            var self = this;
+            this.$refs.regrule.validate(function (valid) {
+                if (valid) {
+                    _util2.default.request('reg', _this2.regrule, function (data) {
+                        if (data.state === 301) {
+                            self.$message({
+                                showClose: true,
+                                message: '账号已存在',
+                                type: 'error'
+                            });
+                            self.$refs.regrule.resetFields(); //重置表单
+                        } else {
+                            if (data.state === 200) {
+                                self.$message({
+                                    showClose: true,
+                                    message: '注册成功',
+                                    type: 'success'
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    return false;
+                };
             });
         }
     }
 }; //
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -740,32 +875,50 @@ module.exports = __webpack_require__.p + "./img/login-420-320.6991e9.jpg";
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', [_vm._m(0), _vm._v(" "), _c('div', {
     staticClass: "main"
-  }, [_c('el-input', {
-    staticClass: "name",
+  }, [_c('el-form', {
+    ref: "loginrule",
+    staticClass: "demo-ruleForm",
     attrs: {
-      "placeholder": "请输入账号",
+      "model": _vm.loginrule,
+      "rules": _vm.rule,
+      "label-width": "100px"
+    }
+  }, [_c('el-form-item', {
+    attrs: {
+      "prop": "name"
+    }
+  }, [_c('el-input', {
+    attrs: {
+      "type": "text",
+      "auto-complete": "off",
+      "placeholder": "请输入用户名",
       "autofocus": true
     },
     model: {
-      value: (_vm.name),
+      value: (_vm.loginrule.name),
       callback: function($$v) {
-        _vm.name = $$v
+        _vm.loginrule.name = $$v
       },
-      expression: "name"
+      expression: "loginrule.name"
     }
-  }), _vm._v(" "), _c('el-input', {
-    staticClass: "password",
+  })], 1), _vm._v(" "), _c('el-form-item', {
     attrs: {
+      "prop": "password"
+    }
+  }, [_c('el-input', {
+    attrs: {
+      "type": "password",
+      "auto-complete": "off",
       "placeholder": "请输入密码"
     },
     model: {
-      value: (_vm.password),
+      value: (_vm.loginrule.password),
       callback: function($$v) {
-        _vm.password = $$v
+        _vm.loginrule.password = $$v
       },
-      expression: "password"
+      expression: "loginrule.password"
     }
-  })], 1), _vm._v(" "), _c('div', {
+  })], 1)], 1)], 1), _vm._v(" "), _c('div', {
     staticClass: "buttons"
   }, [_c('el-button', {
     staticClass: "login",
@@ -833,43 +986,67 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', [_vm._m(0), _vm._v(" "), _c('div', {
     staticClass: "main"
-  }, [_c('el-input', {
-    staticClass: "name",
+  }, [_c('el-form', {
+    ref: "regrule",
+    staticClass: "demo-ruleForm",
     attrs: {
-      "placeholder": "请输入账号"
+      "model": _vm.regrule,
+      "rules": _vm.rule,
+      "label-width": "100px"
+    }
+  }, [_c('el-form-item', {
+    attrs: {
+      "prop": "name"
+    }
+  }, [_c('el-input', {
+    attrs: {
+      "type": "text",
+      "auto-complete": "off",
+      "placeholder": "请输入用户名",
+      "autofocus": true
     },
     model: {
-      value: (_vm.name),
+      value: (_vm.regrule.name),
       callback: function($$v) {
-        _vm.name = $$v
+        _vm.regrule.name = $$v
       },
-      expression: "name"
+      expression: "regrule.name"
     }
-  }), _vm._v(" "), _c('el-input', {
-    staticClass: "password",
+  })], 1), _vm._v(" "), _c('el-form-item', {
     attrs: {
+      "prop": "password"
+    }
+  }, [_c('el-input', {
+    attrs: {
+      "type": "password",
+      "auto-complete": "off",
       "placeholder": "请输入密码"
     },
     model: {
-      value: (_vm.password),
+      value: (_vm.regrule.password),
       callback: function($$v) {
-        _vm.password = $$v
+        _vm.regrule.password = $$v
       },
-      expression: "password"
+      expression: "regrule.password"
     }
-  }), _vm._v(" "), _c('el-input', {
-    staticClass: "check-password",
+  })], 1), _vm._v(" "), _c('el-form-item', {
     attrs: {
-      "placeholder": "请再次输入密码"
+      "prop": "check_password"
+    }
+  }, [_c('el-input', {
+    attrs: {
+      "type": "password",
+      "auto-complete": "off",
+      "placeholder": "请再次输入密码确认"
     },
     model: {
-      value: (_vm.check_password),
+      value: (_vm.regrule.check_password),
       callback: function($$v) {
-        _vm.check_password = $$v
+        _vm.regrule.check_password = $$v
       },
-      expression: "check_password"
+      expression: "regrule.check_password"
     }
-  })], 1), _vm._v(" "), _c('div', {
+  })], 1)], 1)], 1), _vm._v(" "), _c('div', {
     staticClass: "buttons"
   }, [_c('el-button', {
     staticClass: "reg",

@@ -65,3 +65,8 @@ button {cursor: pointer;}
 input::-moz-focus-inner { border: 0; padding: 0;}
 
 .clear {clear:both;}
+
+/* 输入框 */
+.el-form-item__content{
+    margin-left: 0 !important;
+}
