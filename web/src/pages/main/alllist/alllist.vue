@@ -1,0 +1,32 @@
+<template>
+    <div>
+        <div v-for="item in allllist">
+            <p>{{item.title}}</p>
+            <el-breadcrumb>
+                <el-breadcrumb-item>作者{{item.author}}</el-breadcrumb-item>
+                <el-breadcrumb-item>时间{{item.timestamp}}</el-breadcrumb-item>
+                <el-breadcrumb-item>{{item.viewnumber}}次阅读</el-breadcrumb-item>
+                <el-breadcrumb-item>{{item.comment}}个评论</el-breadcrumb-item>
+            </el-breadcrumb>
+            <p>{{item.subtitle}}</p>
+        </div>
+    </div>
+</template>
+<script>
+    export default{
+        data(){
+            return{
+                alllist:[
+                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'},
+                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'},
+                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'},
+                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'},
+                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'},
+                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'},
+                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'},
+                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'}
+                ]
+            }
+        }
+    }
+</script>

@@ -82,6 +82,9 @@
                                     message: '登陆成功',
                                     type: 'success'
                                 });
+                                setTimeout(function(){
+                                    window.location.href='http://localhost:3000/main.html';
+                                },1000);
                                 break;
                                 default:
                                 break;

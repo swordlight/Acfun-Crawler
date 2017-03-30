@@ -416,10 +416,38 @@ function applyToTag (styleElement, obj) {
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "./img/logo_icon.2f0782.png";
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    request: function request(url, data, fn) {
+        url = 'http://localhost:3000/' + url;
+        data = JSON.stringify(data); //转为json
+        var obj = new XMLHttpRequest();
+        obj.open("POST", url, true);
+        obj.setRequestHeader("Content-type", "application/json;charset=utf-8"); // 发送信息至服务器时内容编码类型
+        obj.onreadystatechange = function () {
+            if (obj.readyState == 4 && (obj.status == 200 || obj.status == 304)) {
+                // 304未修改                
+                var responseText = JSON.parse(obj.responseText);
+                fn(responseText); //解析json
+            }
+        };
+        obj.send(data);
+    }
+};
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "./img/logo_icon.2f0782.png";
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -428,7 +456,7 @@ __webpack_require__(19)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(7),
+  __webpack_require__(8),
   /* template */
   __webpack_require__(16),
   /* scopeId */
@@ -457,7 +485,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -466,7 +494,7 @@ __webpack_require__(18)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(8),
+  __webpack_require__(9),
   /* template */
   __webpack_require__(15),
   /* scopeId */
@@ -495,7 +523,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -504,7 +532,7 @@ __webpack_require__(20)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(9),
+  __webpack_require__(10),
   /* template */
   __webpack_require__(17),
   /* scopeId */
@@ -533,7 +561,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -562,7 +590,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = {};
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -572,7 +600,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _util = __webpack_require__(10);
+var _util = __webpack_require__(3);
 
 var _util2 = _interopRequireDefault(_util);
 
@@ -635,6 +663,9 @@ exports.default = {
                                     message: '登陆成功',
                                     type: 'success'
                                 });
+                                setTimeout(function () {
+                                    window.location.href = 'http://localhost:3000/main.html';
+                                }, 1000);
                                 break;
                             default:
                                 break;
@@ -673,7 +704,7 @@ exports.default = {
 //
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -683,7 +714,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _util = __webpack_require__(10);
+var _util = __webpack_require__(3);
 
 var _util2 = _interopRequireDefault(_util);
 
@@ -759,6 +790,9 @@ exports.default = {
                                     message: '注册成功',
                                     type: 'success'
                                 });
+                                setTimeout(function () {
+                                    window.location.href = 'http://localhost:3000/main.html';
+                                }, 1000);
                             }
                         }
                     });
@@ -793,34 +827,6 @@ exports.default = {
 //
 
 /***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = {
-    request: function request(url, data, fn) {
-        url = 'http://localhost:3000/' + url;
-        data = JSON.stringify(data); //转为json
-        var obj = new XMLHttpRequest();
-        obj.open("POST", url, true);
-        obj.setRequestHeader("Content-type", "application/json;charset=utf-8"); // 发送信息至服务器时内容编码类型
-        obj.onreadystatechange = function () {
-            if (obj.readyState == 4 && (obj.status == 200 || obj.status == 304)) {
-                // 304未修改                
-                var responseText = JSON.parse(obj.responseText);
-                fn(responseText); //解析json
-            }
-        };
-        obj.send(data);
-    }
-};
-
-/***/ }),
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -829,7 +835,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "\nheader[data-v-049e71f3] {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top[data-v-049e71f3] {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url(" + __webpack_require__(3) + ");\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main[data-v-049e71f3] {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name[data-v-049e71f3] {\n  margin-bottom: 20px;\n}\n.buttons[data-v-049e71f3] {\n  width: 80%;\n  height: auto;\n  margin: auto;\n}\n.buttons .login[data-v-049e71f3] {\n  float: left;\n  width: 40%;\n  background-color: #67BDCD;\n  border-radius: 0;\n  border: none;\n}\n.buttons .reg[data-v-049e71f3] {\n  float: right;\n  width: 40%;\n  background-color: white;\n  border-radius: 0;\n  border: 1px #BBBBBB solid;\n  color: #666;\n}\n.footer[data-v-049e71f3] {\n  width: 80%;\n  margin: auto;\n  margin-top: 80px;\n  text-align: right;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/login.vue"],"names":[],"mappings":";AAAA;EACE,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;CACxB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,0CAAqD;EACrD,gCAAgC;EAChC,6BAA6B;EAC7B,gBAAgB;EAChB,kBAAkB;EAClB,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;CACd;AACD;EACE,YAAY;EACZ,WAAW;EACX,0BAA0B;EAC1B,iBAAiB;EACjB,aAAa;CACd;AACD;EACE,aAAa;EACb,WAAW;EACX,wBAAwB;EACxB,iBAAiB;EACjB,0BAA0B;EAC1B,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,kBAAkB;CACnB","file":"login.vue","sourcesContent":["header {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url('../../../assets/img/logo_icon.png');\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name {\n  margin-bottom: 20px;\n}\n.buttons {\n  width: 80%;\n  height: auto;\n  margin: auto;\n}\n.buttons .login {\n  float: left;\n  width: 40%;\n  background-color: #67BDCD;\n  border-radius: 0;\n  border: none;\n}\n.buttons .reg {\n  float: right;\n  width: 40%;\n  background-color: white;\n  border-radius: 0;\n  border: 1px #BBBBBB solid;\n  color: #666;\n}\n.footer {\n  width: 80%;\n  margin: auto;\n  margin-top: 80px;\n  text-align: right;\n}\n"],"sourceRoot":""}]);
+exports.push([module.i, "\nheader[data-v-049e71f3] {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top[data-v-049e71f3] {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url(" + __webpack_require__(4) + ");\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main[data-v-049e71f3] {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name[data-v-049e71f3] {\n  margin-bottom: 20px;\n}\n.buttons[data-v-049e71f3] {\n  width: 80%;\n  height: auto;\n  margin: auto;\n}\n.buttons .login[data-v-049e71f3] {\n  float: left;\n  width: 40%;\n  background-color: #67BDCD;\n  border-radius: 0;\n  border: none;\n}\n.buttons .reg[data-v-049e71f3] {\n  float: right;\n  width: 40%;\n  background-color: white;\n  border-radius: 0;\n  border: 1px #BBBBBB solid;\n  color: #666;\n}\n.footer[data-v-049e71f3] {\n  width: 80%;\n  margin: auto;\n  margin-top: 80px;\n  text-align: right;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/login.vue"],"names":[],"mappings":";AAAA;EACE,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;CACxB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,0CAAqD;EACrD,gCAAgC;EAChC,6BAA6B;EAC7B,gBAAgB;EAChB,kBAAkB;EAClB,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;CACd;AACD;EACE,YAAY;EACZ,WAAW;EACX,0BAA0B;EAC1B,iBAAiB;EACjB,aAAa;CACd;AACD;EACE,aAAa;EACb,WAAW;EACX,wBAAwB;EACxB,iBAAiB;EACjB,0BAA0B;EAC1B,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,kBAAkB;CACnB","file":"login.vue","sourcesContent":["header {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url('../../../assets/img/logo_icon.png');\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name {\n  margin-bottom: 20px;\n}\n.buttons {\n  width: 80%;\n  height: auto;\n  margin: auto;\n}\n.buttons .login {\n  float: left;\n  width: 40%;\n  background-color: #67BDCD;\n  border-radius: 0;\n  border: none;\n}\n.buttons .reg {\n  float: right;\n  width: 40%;\n  background-color: white;\n  border-radius: 0;\n  border: 1px #BBBBBB solid;\n  color: #666;\n}\n.footer {\n  width: 80%;\n  margin: auto;\n  margin-top: 80px;\n  text-align: right;\n}\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -857,7 +863,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "\nheader[data-v-7ed0221e] {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top[data-v-7ed0221e] {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url(" + __webpack_require__(3) + ");\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main[data-v-7ed0221e] {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name[data-v-7ed0221e] {\n  margin-bottom: 20px;\n}\n.main .password[data-v-7ed0221e] {\n  margin-bottom: 20px;\n}\n.buttons[data-v-7ed0221e] {\n  width: 80%;\n  height: auto;\n  margin: auto;\n  text-align: center;\n}\n.buttons .reg[data-v-7ed0221e] {\n  width: 90%;\n  background-color: #67BDCD;\n  border-radius: 6px;\n  border: none;\n  color: white;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/reg.vue"],"names":[],"mappings":";AAAA;EACE,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;CACxB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,0CAAqD;EACrD,gCAAgC;EAChC,6BAA6B;EAC7B,gBAAgB;EAChB,kBAAkB;EAClB,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,mBAAmB;CACpB;AACD;EACE,WAAW;EACX,0BAA0B;EAC1B,mBAAmB;EACnB,aAAa;EACb,aAAa;CACd","file":"reg.vue","sourcesContent":["header {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url('../../../assets/img/logo_icon.png');\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name {\n  margin-bottom: 20px;\n}\n.main .password {\n  margin-bottom: 20px;\n}\n.buttons {\n  width: 80%;\n  height: auto;\n  margin: auto;\n  text-align: center;\n}\n.buttons .reg {\n  width: 90%;\n  background-color: #67BDCD;\n  border-radius: 6px;\n  border: none;\n  color: white;\n}\n"],"sourceRoot":""}]);
+exports.push([module.i, "\nheader[data-v-7ed0221e] {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top[data-v-7ed0221e] {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url(" + __webpack_require__(4) + ");\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main[data-v-7ed0221e] {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name[data-v-7ed0221e] {\n  margin-bottom: 20px;\n}\n.main .password[data-v-7ed0221e] {\n  margin-bottom: 20px;\n}\n.buttons[data-v-7ed0221e] {\n  width: 80%;\n  height: auto;\n  margin: auto;\n  text-align: center;\n}\n.buttons .reg[data-v-7ed0221e] {\n  width: 90%;\n  background-color: #67BDCD;\n  border-radius: 6px;\n  border: none;\n  color: white;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/reg.vue"],"names":[],"mappings":";AAAA;EACE,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;CACxB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,0CAAqD;EACrD,gCAAgC;EAChC,6BAA6B;EAC7B,gBAAgB;EAChB,kBAAkB;EAClB,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,mBAAmB;CACpB;AACD;EACE,WAAW;EACX,0BAA0B;EAC1B,mBAAmB;EACnB,aAAa;EACb,aAAa;CACd","file":"reg.vue","sourcesContent":["header {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url('../../../assets/img/logo_icon.png');\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name {\n  margin-bottom: 20px;\n}\n.main .password {\n  margin-bottom: 20px;\n}\n.buttons {\n  width: 80%;\n  height: auto;\n  margin: auto;\n  text-align: center;\n}\n.buttons .reg {\n  width: 90%;\n  background-color: #67BDCD;\n  border-radius: 6px;\n  border: none;\n  color: white;\n}\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -1189,18 +1195,18 @@ module.exports = function listToStyles (parentId, list) {
 "use strict";
 
 
-var _app = __webpack_require__(4);
+var _app = __webpack_require__(5);
 
 var _app2 = _interopRequireDefault(_app);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import '../../assets/css/login.less';
+// import '../../assets/css/login.css';
 
 Vue.use(VueRouter); //调用vuerouter
 
 var routes = [//创建路由
-{ path: '/login', component: __webpack_require__(5) }, { path: '/reg', component: __webpack_require__(6) }, { path: '/', redirect: '/login' }];
+{ path: '/login', component: __webpack_require__(6) }, { path: '/reg', component: __webpack_require__(7) }, { path: '/', redirect: '/login' }];
 
 var router = new VueRouter({ //创建router实例
     routes: routes

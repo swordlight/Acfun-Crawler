@@ -1,5 +1,5 @@
 import App from './app';
-// import '../../assets/css/login.less';
+// import '../../assets/css/login.css';
 
 Vue.use(VueRouter); //调用vuerouter
 
