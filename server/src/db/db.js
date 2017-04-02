@@ -23,6 +23,20 @@ let UserSchema=new Schema({  //创建schema实例(数据模式，表结构)
 })
 let UserModel=mongoose.model('users',UserSchema,'users');  //创建schema模型model，对应collection,可操作数据库 
 
+//blogs collection
+let BlogsSchema=new Schema({
+    bid:{type:Number},
+    title:{type:String},
+    author:{type:String},
+    timestamp:{type:String},
+    comment:{type:Number},
+    viewnumber:{type:Number},
+    subtitle:{type:String},
+    content:{type:String}
+})
+let BlogModel=mongoose.model('blogs',BlogsSchema,'blogs');
+
 export default {
-    users:UserModel
+    users:UserModel,
+    blogs:BlogModel
 }

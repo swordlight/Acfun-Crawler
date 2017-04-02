@@ -1,4 +1,5 @@
 import App from './app';
+import store from '../../vuex/store';
 
 Vue.use(VueRouter);
 const routes=[
@@ -12,6 +13,7 @@ var router=new VueRouter({
 })
 const app=new Vue({
     router,
+    store,
     el: '#app',
     template: '<app></app>',
     components: {

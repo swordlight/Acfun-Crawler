@@ -63,11 +63,65 @@
 /******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 22);
+/******/ 	return __webpack_require__(__webpack_require__.s = 43);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports) {
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  scopeId,
+  cssModules
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  // inject cssModules
+  if (cssModules) {
+    var computed = Object.create(options.computed || null)
+    Object.keys(cssModules).forEach(function (key) {
+      var module = cssModules[key]
+      computed[key] = function () { return module }
+    })
+    options.computed = computed
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports) {
 
 /*
@@ -123,60 +177,6 @@ module.exports = function() {
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  scopeId,
-  cssModules
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  // inject cssModules
-  if (cssModules) {
-    var computed = Object.create(options.computed || null)
-    Object.keys(cssModules).forEach(function (key) {
-      var module = cssModules[key]
-      computed[key] = function () { return module }
-    })
-    options.computed = computed
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -196,7 +196,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(21)
+var listToStyles = __webpack_require__(4)
 
 /*
 type StyleObject = {
@@ -442,23 +442,57 @@ exports.default = {
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-module.exports = __webpack_require__.p + "./img/logo_icon.2f0782.png";
+/**
+ * Translates the list format produced by css-loader into something
+ * easier to manipulate.
+ */
+module.exports = function listToStyles (parentId, list) {
+  var styles = []
+  var newStyles = {}
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i]
+    var id = item[0]
+    var css = item[1]
+    var media = item[2]
+    var sourceMap = item[3]
+    var part = {
+      id: parentId + ':' + i,
+      css: css,
+      media: media,
+      sourceMap: sourceMap
+    }
+    if (!newStyles[id]) {
+      styles.push(newStyles[id] = { id: id, parts: [part] })
+    } else {
+      newStyles[id].parts.push(part)
+    }
+  }
+  return styles
+}
+
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__.p + "./img/logo_icon.2f0782.png";
+
+/***/ }),
+/* 6 */,
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
 
 /* styles */
-__webpack_require__(19)
+__webpack_require__(40)
 
-var Component = __webpack_require__(1)(
+var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(8),
+  __webpack_require__(14),
   /* template */
-  __webpack_require__(16),
+  __webpack_require__(33),
   /* scopeId */
   "data-v-0eca552b",
   /* cssModules */
@@ -485,18 +519,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(18)
+__webpack_require__(38)
 
-var Component = __webpack_require__(1)(
+var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(9),
-  /* template */
   __webpack_require__(15),
+  /* template */
+  __webpack_require__(31),
   /* scopeId */
   "data-v-049e71f3",
   /* cssModules */
@@ -523,18 +557,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(20)
+__webpack_require__(42)
 
-var Component = __webpack_require__(1)(
+var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(10),
+  __webpack_require__(16),
   /* template */
-  __webpack_require__(17),
+  __webpack_require__(37),
   /* scopeId */
   "data-v-7ed0221e",
   /* cssModules */
@@ -561,7 +595,11 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 8 */
+/* 10 */,
+/* 11 */,
+/* 12 */,
+/* 13 */,
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -590,7 +628,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = {};
 
 /***/ }),
-/* 9 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -704,7 +742,7 @@ exports.default = {
 //
 
 /***/ }),
-/* 10 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -827,55 +865,65 @@ exports.default = {
 //
 
 /***/ }),
-/* 11 */
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(0)();
+exports = module.exports = __webpack_require__(1)();
 // imports
 
 
 // module
-exports.push([module.i, "\nheader[data-v-049e71f3] {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top[data-v-049e71f3] {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url(" + __webpack_require__(4) + ");\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main[data-v-049e71f3] {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name[data-v-049e71f3] {\n  margin-bottom: 20px;\n}\n.buttons[data-v-049e71f3] {\n  width: 80%;\n  height: auto;\n  margin: auto;\n}\n.buttons .login[data-v-049e71f3] {\n  float: left;\n  width: 40%;\n  background-color: #67BDCD;\n  border-radius: 0;\n  border: none;\n}\n.buttons .reg[data-v-049e71f3] {\n  float: right;\n  width: 40%;\n  background-color: white;\n  border-radius: 0;\n  border: 1px #BBBBBB solid;\n  color: #666;\n}\n.footer[data-v-049e71f3] {\n  width: 80%;\n  margin: auto;\n  margin-top: 80px;\n  text-align: right;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/login.vue"],"names":[],"mappings":";AAAA;EACE,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;CACxB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,0CAAqD;EACrD,gCAAgC;EAChC,6BAA6B;EAC7B,gBAAgB;EAChB,kBAAkB;EAClB,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;CACd;AACD;EACE,YAAY;EACZ,WAAW;EACX,0BAA0B;EAC1B,iBAAiB;EACjB,aAAa;CACd;AACD;EACE,aAAa;EACb,WAAW;EACX,wBAAwB;EACxB,iBAAiB;EACjB,0BAA0B;EAC1B,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,kBAAkB;CACnB","file":"login.vue","sourcesContent":["header {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url('../../../assets/img/logo_icon.png');\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name {\n  margin-bottom: 20px;\n}\n.buttons {\n  width: 80%;\n  height: auto;\n  margin: auto;\n}\n.buttons .login {\n  float: left;\n  width: 40%;\n  background-color: #67BDCD;\n  border-radius: 0;\n  border: none;\n}\n.buttons .reg {\n  float: right;\n  width: 40%;\n  background-color: white;\n  border-radius: 0;\n  border: 1px #BBBBBB solid;\n  color: #666;\n}\n.footer {\n  width: 80%;\n  margin: auto;\n  margin-top: 80px;\n  text-align: right;\n}\n"],"sourceRoot":""}]);
+exports.push([module.i, "\nheader[data-v-049e71f3] {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top[data-v-049e71f3] {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url(" + __webpack_require__(5) + ");\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main[data-v-049e71f3] {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name[data-v-049e71f3] {\n  margin-bottom: 20px;\n}\n.buttons[data-v-049e71f3] {\n  width: 80%;\n  height: auto;\n  margin: auto;\n}\n.buttons .login[data-v-049e71f3] {\n  float: left;\n  width: 40%;\n  background-color: #67BDCD;\n  border-radius: 0;\n  border: none;\n}\n.buttons .reg[data-v-049e71f3] {\n  float: right;\n  width: 40%;\n  background-color: white;\n  border-radius: 0;\n  border: 1px #BBBBBB solid;\n  color: #666;\n}\n.footer[data-v-049e71f3] {\n  width: 80%;\n  margin: auto;\n  margin-top: 80px;\n  text-align: right;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/login.vue"],"names":[],"mappings":";AAAA;EACE,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;CACxB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,0CAAqD;EACrD,gCAAgC;EAChC,6BAA6B;EAC7B,gBAAgB;EAChB,kBAAkB;EAClB,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;CACd;AACD;EACE,YAAY;EACZ,WAAW;EACX,0BAA0B;EAC1B,iBAAiB;EACjB,aAAa;CACd;AACD;EACE,aAAa;EACb,WAAW;EACX,wBAAwB;EACxB,iBAAiB;EACjB,0BAA0B;EAC1B,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,kBAAkB;CACnB","file":"login.vue","sourcesContent":["header {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url('../../../assets/img/logo_icon.png');\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name {\n  margin-bottom: 20px;\n}\n.buttons {\n  width: 80%;\n  height: auto;\n  margin: auto;\n}\n.buttons .login {\n  float: left;\n  width: 40%;\n  background-color: #67BDCD;\n  border-radius: 0;\n  border: none;\n}\n.buttons .reg {\n  float: right;\n  width: 40%;\n  background-color: white;\n  border-radius: 0;\n  border: 1px #BBBBBB solid;\n  color: #666;\n}\n.footer {\n  width: 80%;\n  margin: auto;\n  margin-top: 80px;\n  text-align: right;\n}\n"],"sourceRoot":""}]);
 
 // exports
 
 
 /***/ }),
-/* 12 */
+/* 24 */,
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(0)();
+exports = module.exports = __webpack_require__(1)();
 // imports
 
 
 // module
-exports.push([module.i, "\n.content[data-v-0eca552b] {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.content header[data-v-0eca552b] {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.content article[data-v-0eca552b] {\n  height: 400px;\n  width: 980px;\n  margin: auto;\n  margin-top: 100px;\n}\n.content article .login-img[data-v-0eca552b] {\n  float: left;\n  width: 420px;\n  height: 320px;\n  background: url(" + __webpack_require__(14) + ");\n  background-size: 100% 100%;\n  background-repeat: no-repeat;\n  box-shadow: 0 0 70px 10px #f9f9f9 inset;\n}\n.content article .login-reg[data-v-0eca552b] {\n  float: right;\n  width: 40%;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/app.vue"],"names":[],"mappings":";AAAA;EACE,mBAAmB;EACnB,YAAY;EACZ,aAAa;CACd;AACD;EACE,YAAY;EACZ,aAAa;EACb,iCAAiC;CAClC;AACD;EACE,cAAc;EACd,aAAa;EACb,aAAa;EACb,kBAAkB;CACnB;AACD;EACE,YAAY;EACZ,aAAa;EACb,cAAc;EACd,0CAAyD;EACzD,2BAA2B;EAC3B,6BAA6B;EAC7B,wCAAwC;CACzC;AACD;EACE,aAAa;EACb,WAAW;CACZ","file":"app.vue","sourcesContent":[".content {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.content header {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.content article {\n  height: 400px;\n  width: 980px;\n  margin: auto;\n  margin-top: 100px;\n}\n.content article .login-img {\n  float: left;\n  width: 420px;\n  height: 320px;\n  background: url('../../../assets/img/login-420-320.jpg');\n  background-size: 100% 100%;\n  background-repeat: no-repeat;\n  box-shadow: 0 0 70px 10px #f9f9f9 inset;\n}\n.content article .login-reg {\n  float: right;\n  width: 40%;\n}\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.content[data-v-0eca552b] {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.content header[data-v-0eca552b] {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.content article[data-v-0eca552b] {\n  height: 400px;\n  width: 980px;\n  margin: auto;\n  margin-top: 100px;\n}\n.content article .login-img[data-v-0eca552b] {\n  float: left;\n  width: 420px;\n  height: 320px;\n  background: url(" + __webpack_require__(28) + ");\n  background-size: 100% 100%;\n  background-repeat: no-repeat;\n  box-shadow: 0 0 70px 10px #f9f9f9 inset;\n}\n.content article .login-reg[data-v-0eca552b] {\n  float: right;\n  width: 40%;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/app.vue"],"names":[],"mappings":";AAAA;EACE,mBAAmB;EACnB,YAAY;EACZ,aAAa;CACd;AACD;EACE,YAAY;EACZ,aAAa;EACb,iCAAiC;CAClC;AACD;EACE,cAAc;EACd,aAAa;EACb,aAAa;EACb,kBAAkB;CACnB;AACD;EACE,YAAY;EACZ,aAAa;EACb,cAAc;EACd,0CAAyD;EACzD,2BAA2B;EAC3B,6BAA6B;EAC7B,wCAAwC;CACzC;AACD;EACE,aAAa;EACb,WAAW;CACZ","file":"app.vue","sourcesContent":[".content {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.content header {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.content article {\n  height: 400px;\n  width: 980px;\n  margin: auto;\n  margin-top: 100px;\n}\n.content article .login-img {\n  float: left;\n  width: 420px;\n  height: 320px;\n  background: url('../../../assets/img/login-420-320.jpg');\n  background-size: 100% 100%;\n  background-repeat: no-repeat;\n  box-shadow: 0 0 70px 10px #f9f9f9 inset;\n}\n.content article .login-reg {\n  float: right;\n  width: 40%;\n}\n"],"sourceRoot":""}]);
 
 // exports
 
 
 /***/ }),
-/* 13 */
+/* 26 */,
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(0)();
+exports = module.exports = __webpack_require__(1)();
 // imports
 
 
 // module
-exports.push([module.i, "\nheader[data-v-7ed0221e] {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top[data-v-7ed0221e] {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url(" + __webpack_require__(4) + ");\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main[data-v-7ed0221e] {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name[data-v-7ed0221e] {\n  margin-bottom: 20px;\n}\n.main .password[data-v-7ed0221e] {\n  margin-bottom: 20px;\n}\n.buttons[data-v-7ed0221e] {\n  width: 80%;\n  height: auto;\n  margin: auto;\n  text-align: center;\n}\n.buttons .reg[data-v-7ed0221e] {\n  width: 90%;\n  background-color: #67BDCD;\n  border-radius: 6px;\n  border: none;\n  color: white;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/reg.vue"],"names":[],"mappings":";AAAA;EACE,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;CACxB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,0CAAqD;EACrD,gCAAgC;EAChC,6BAA6B;EAC7B,gBAAgB;EAChB,kBAAkB;EAClB,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,mBAAmB;CACpB;AACD;EACE,WAAW;EACX,0BAA0B;EAC1B,mBAAmB;EACnB,aAAa;EACb,aAAa;CACd","file":"reg.vue","sourcesContent":["header {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url('../../../assets/img/logo_icon.png');\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name {\n  margin-bottom: 20px;\n}\n.main .password {\n  margin-bottom: 20px;\n}\n.buttons {\n  width: 80%;\n  height: auto;\n  margin: auto;\n  text-align: center;\n}\n.buttons .reg {\n  width: 90%;\n  background-color: #67BDCD;\n  border-radius: 6px;\n  border: none;\n  color: white;\n}\n"],"sourceRoot":""}]);
+exports.push([module.i, "\nheader[data-v-7ed0221e] {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top[data-v-7ed0221e] {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url(" + __webpack_require__(5) + ");\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main[data-v-7ed0221e] {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name[data-v-7ed0221e] {\n  margin-bottom: 20px;\n}\n.main .password[data-v-7ed0221e] {\n  margin-bottom: 20px;\n}\n.buttons[data-v-7ed0221e] {\n  width: 80%;\n  height: auto;\n  margin: auto;\n  text-align: center;\n}\n.buttons .reg[data-v-7ed0221e] {\n  width: 90%;\n  background-color: #67BDCD;\n  border-radius: 6px;\n  border: none;\n  color: white;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/reg.vue"],"names":[],"mappings":";AAAA;EACE,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;CACxB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,0CAAqD;EACrD,gCAAgC;EAChC,6BAA6B;EAC7B,gBAAgB;EAChB,kBAAkB;EAClB,iBAAiB;EACjB,YAAY;CACb;AACD;EACE,WAAW;EACX,aAAa;EACb,iBAAiB;EACjB,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,oBAAoB;CACrB;AACD;EACE,WAAW;EACX,aAAa;EACb,aAAa;EACb,mBAAmB;CACpB;AACD;EACE,WAAW;EACX,0BAA0B;EAC1B,mBAAmB;EACnB,aAAa;EACb,aAAa;CACd","file":"reg.vue","sourcesContent":["header {\n  width: 100%;\n  height: 30px;\n  text-align: center;\n  vertical-align: bottom;\n}\nheader .top {\n  width: 60%;\n  height: 100%;\n  margin: auto;\n  background: url('../../../assets/img/logo_icon.png');\n  background-size: 29px 26px left;\n  background-repeat: no-repeat;\n  font-size: 22px;\n  text-align: right;\n  font-weight: 800;\n  color: #666;\n}\n.main {\n  width: 80%;\n  margin: auto;\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n.main .name {\n  margin-bottom: 20px;\n}\n.main .password {\n  margin-bottom: 20px;\n}\n.buttons {\n  width: 80%;\n  height: auto;\n  margin: auto;\n  text-align: center;\n}\n.buttons .reg {\n  width: 90%;\n  background-color: #67BDCD;\n  border-radius: 6px;\n  border: none;\n  color: white;\n}\n"],"sourceRoot":""}]);
 
 // exports
 
 
 /***/ }),
-/* 14 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "./img/login-420-320.6991e9.jpg";
 
 /***/ }),
-/* 15 */
+/* 29 */,
+/* 30 */,
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -965,7 +1013,8 @@ if (false) {
 }
 
 /***/ }),
-/* 16 */
+/* 32 */,
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -986,7 +1035,10 @@ if (false) {
 }
 
 /***/ }),
-/* 17 */
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -1078,13 +1130,13 @@ if (false) {
 }
 
 /***/ }),
-/* 18 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(11);
+var content = __webpack_require__(23);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -1104,13 +1156,14 @@ if(false) {
 }
 
 /***/ }),
-/* 19 */
+/* 39 */,
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(12);
+var content = __webpack_require__(25);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -1130,13 +1183,14 @@ if(false) {
 }
 
 /***/ }),
-/* 20 */
+/* 41 */,
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(13);
+var content = __webpack_require__(27);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -1156,46 +1210,13 @@ if(false) {
 }
 
 /***/ }),
-/* 21 */
-/***/ (function(module, exports) {
-
-/**
- * Translates the list format produced by css-loader into something
- * easier to manipulate.
- */
-module.exports = function listToStyles (parentId, list) {
-  var styles = []
-  var newStyles = {}
-  for (var i = 0; i < list.length; i++) {
-    var item = list[i]
-    var id = item[0]
-    var css = item[1]
-    var media = item[2]
-    var sourceMap = item[3]
-    var part = {
-      id: parentId + ':' + i,
-      css: css,
-      media: media,
-      sourceMap: sourceMap
-    }
-    if (!newStyles[id]) {
-      styles.push(newStyles[id] = { id: id, parts: [part] })
-    } else {
-      newStyles[id].parts.push(part)
-    }
-  }
-  return styles
-}
-
-
-/***/ }),
-/* 22 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _app = __webpack_require__(5);
+var _app = __webpack_require__(7);
 
 var _app2 = _interopRequireDefault(_app);
 
@@ -1206,7 +1227,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Vue.use(VueRouter); //调用vuerouter
 
 var routes = [//创建路由
-{ path: '/login', component: __webpack_require__(6) }, { path: '/reg', component: __webpack_require__(7) }, { path: '/', redirect: '/login' }];
+{ path: '/login', component: __webpack_require__(8) }, { path: '/reg', component: __webpack_require__(9) }, { path: '/', redirect: '/login' }];
 
 var router = new VueRouter({ //创建router实例
     routes: routes

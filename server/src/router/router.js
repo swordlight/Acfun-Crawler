@@ -9,5 +9,11 @@ export default (app,express,action)=>{
     router.all('/login',function(req,res){  //登录路由
         action.login(req,res);
     });
+    router.all('/alllist',function(req,res){  //所有博客列表
+        action.alllist(req,res);
+    });
+    router.all('/content',function(req,res){  //查看博客详情
+        action.content(req,res);
+    })
     app.use(router);
 }
