@@ -12,5 +12,8 @@ export default{
             }
         };
         obj.send(data);
+    },
+    timetransform(timestamp){
+        return new Date(timestamp).toLocaleString().replace(/\//g, "-");
     }
 }

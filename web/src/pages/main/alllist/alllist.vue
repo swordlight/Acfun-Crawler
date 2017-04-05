@@ -1,7 +1,7 @@
 <template>
     <div class="content">
-        <div v-for="(item,index) in alllist" class="item" @click="lookarticle(index)">
-            <a href="javascript:void(null)" class="title">{{item.title}}</a>
+        <div v-for="(item,index) in alllist" class="item">
+            <a href="javascript:void(null)" class="title" @click="lookarticle(index)">{{item.title}}</a>
             <el-breadcrumb class="des">
                 <el-breadcrumb-item class="author">作者{{item.author}}</el-breadcrumb-item>
                 <el-breadcrumb-item class="timestamp">时间{{item.timestamp}}</el-breadcrumb-item>

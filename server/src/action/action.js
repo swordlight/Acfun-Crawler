@@ -99,5 +99,30 @@ export default{
                 res.status(200).json({state:200,msg:'查询成功',data:s[0]});
             }
         })
+    },
+    comments(req,res){
+//         let comment=new db.comments({
+//             bid:10002,
+//             name:'1',
+//             timestamp:new Date().getTime(),
+//             info:`有意思。
+// 哈哈哈`
+//         });
+//         comment.save(function(e,s){
+//             if(e){
+//                 console.log('error'+e);
+//             }else{
+//                 console.log('success');        
+//             }    
+//         })
+        let bid=req.body.bid;
+        db.comments.find({'bid':bid},function(e,s){
+            if(e){
+                console.log('error'+e);
+                res.status(500);
+            }else{
+                res.status(200).json({state:200,msg:'查询成功',data:s});
+            }
+        })
     }
 }

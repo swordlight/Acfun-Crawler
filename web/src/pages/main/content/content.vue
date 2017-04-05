@@ -14,6 +14,20 @@
                 <p>{{blog.author}}</p>
             </div>
         </footer>
+        <div class="comments">
+            <div v-for="(item,index) in comments" class="comment">
+                <div class="comment_poster">
+                    <img src="../../../../assets/img/biaoqing.gif" alt="评论">
+                </div>
+                <div class="comment_time">
+                    <p>发表于 {{item.timestamp}}</p>
+                </div>
+                <div class="comment_info">
+                    <p class="comment_name">{{item.name}}</p>
+                    <p class="comment_content" v-for="comment_p in item.info">{{comment_p}}</p>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -21,7 +35,8 @@
     export default{
         data(){
             return{
-                blog:{}
+                blog:{},
+                comments:[]
             }
         },
         created(){
@@ -32,7 +47,16 @@
                 if(data.state===200){
                     data.data.content=data.data.content.split('\n');
                     self.blog=data.data;
-                    console.log(data.data);
+                    util.request('comments',{bid:bid},function(data){
+                        if(data.state===200){
+                            console.log(data.data);
+                            self.comments=data.data;
+                            self.comments.forEach(function(e,index){
+                                e.info=e.info.split('\n');
+                                e.timestamp=util.timetransform(e.timestamp);                                                                        
+                            })
+                        }
+                    })
                 }
             })
         }
@@ -60,17 +84,19 @@
     article{
         font-size:16px;
         border-bottom:1px solid #ddd;
+
+        p{
+            line-height:200%;
+        }
     }
     footer{
         height:80px;
-        border-bottom:1px solid #ddd;
 
         div{
-            width:150px;
-            height:100%;
-            padding:20px 0;
             float:right;
-            
+            margin-top:20px;
+            margin-right:50px;
+
             img{
                 float:left;
                 width:40px;
@@ -88,6 +114,36 @@
             p:hover{
                 color:#c66;
             }
+        }
+    }
+    .comment{
+        border-top:1px solid #ddd;
+
+        .comment_poster{
+            float:left;
+            width:80px;
+
+            img{
+                max-height:80px;
+            }
+        }
+        .comment_info{
+            margin-left:100px;
+            margin-right:180px;
+
+            .comment_name{
+                color:#aaa;
+                font-size:12px;
+            }
+            .comment_content{
+                font-size:13px;
+                margin-left:20px;
+            }
+        }
+        .comment_time{
+            float:right;
+            color:#aaa;
+            font-size:13px;
         }
     }
 </style>

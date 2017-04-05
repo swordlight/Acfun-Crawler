@@ -14,6 +14,9 @@ export default (app,express,action)=>{
     });
     router.all('/content',function(req,res){  //查看博客详情
         action.content(req,res);
+    });
+    router.all('/comments',function(req,res){  //查看博客评论
+        action.comments(req,res);
     })
     app.use(router);
 }

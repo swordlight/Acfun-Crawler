@@ -1,6 +1,6 @@
 <template>
-    <div class="content">
-        <header>
+    <div class="container">
+        <div class="header"> 
             <div class="top">
                 <router-link :to="'alllist'"><img class="logo" src="../../../assets/img/logo-new.png" alt="AcFun" title="AcFun"></router-link>
                 <el-input class="search" placeholder="请输入内容" v-model="search">
@@ -12,13 +12,10 @@
                 </el-input>
                 <router-link to="personlist"><img class="poster" src="../../../assets/img/poster.gif" alt=""></router-link>
             </div>
-        </header>
-        <article>
+        </div>
+        <div class="article">
             <router-view></router-view>
-        </article>
-        <footer>
-
-        </footer>
+        </div>
     </div>                    
 </template>
 <script>
@@ -32,12 +29,12 @@
     }
 </script>
 <style lang="less" scoped>
-    .content{
+    .container{
         position:relative;
         width:100%;
         height:auto;
 
-        header{
+        .header{
             width:100%;
             height:48px;
             border-bottom:1px #FFA5C7 solid;
@@ -67,7 +64,7 @@
             }
         }
 
-        article{
+        .article{
             width:980px;
             margin:auto;
         }

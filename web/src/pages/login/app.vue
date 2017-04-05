@@ -1,17 +1,14 @@
 <template>
-    <div class="content">
-        <header>
+    <div class="container">
+        <div class="header">
 
-        </header>
-        <article>
+        </div>
+        <div class="article">
             <div class="login-img"></div>
             <div class="login-reg">
                 <router-view></router-view>
             </div>
-        </article>
-        <footer>
-
-        </footer>
+        </div>
     </div>                    
 </template>
 <script>
@@ -20,18 +17,18 @@
     }
 </script>
 <style lang="less" scoped>
-    .content{
+    .container{
         position:relative;
         width:100%;
         height:auto;
 
-        header{
+        .header{
             width:100%;
             height:48px;
             border-bottom:1px #FFA5C7 solid;
         }
 
-        article{
+        .article{
             height:400px;
             width:980px;
             margin:auto;

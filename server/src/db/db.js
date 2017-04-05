@@ -28,7 +28,7 @@ let BlogsSchema=new Schema({
     bid:{type:Number},
     title:{type:String},
     author:{type:String},
-    timestamp:{type:String},
+    timestamp:{type:Number},
     comment:{type:Number},
     viewnumber:{type:Number},
     subtitle:{type:String},
@@ -36,7 +36,17 @@ let BlogsSchema=new Schema({
 })
 let BlogModel=mongoose.model('blogs',BlogsSchema,'blogs');
 
+//comments collection
+let commentsSchema=new Schema({
+    bid:{type:Number},
+    name:{type:String},
+    timestamp:{type:Number},
+    info:{type:String}    
+})
+let CommentModel=mongoose.model('comments',commentsSchema,'comments');
+
 export default {
     users:UserModel,
-    blogs:BlogModel
+    blogs:BlogModel,
+    comments:CommentModel
 }
