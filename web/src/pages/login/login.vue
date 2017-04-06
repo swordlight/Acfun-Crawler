@@ -23,7 +23,7 @@
     </div>
 </template>
 <script>
-    import util from '../../lib/util'
+    import {request} from '../../lib/util'
     export default{
         data(){
             var name=(rule,value,callback)=>{
@@ -60,7 +60,7 @@
                 var self=this;
                 this.$refs.loginrule.validate((valid)=>{
                     if(valid){
-                        util.request('login',this.loginrule,function(data){
+                        request('login',this.loginrule,function(data){
                             switch (data.state) {
                                 case 301:
                                 self.$message({

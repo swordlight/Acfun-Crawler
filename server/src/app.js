@@ -10,5 +10,5 @@ app.use(express.static(path.join(__dirname, '../../web'))); //将web的页面设
 const server=app.listen(3000,function(){
     let host=server.address().address;
     let port=server.address().port;
-    console.log('Example app listening at http://%s:%s',host,port);
+    console.log('Example app listening at ' + host + port);
 })

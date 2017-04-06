@@ -2,13 +2,12 @@ import db from '../db/db'
 import util from '../libs/util'
 
 export default{
-    reg(req,res){
+    reg(req,res,next){
         let username=req.body.name;
         let userpassword=req.body.password;
         db.users.find({'username':username},function(e,s){
             if(e){
-                console.log('error'+e);
-                res.status(500);
+                next(e);
             }else{
                 if(s.length>=1){
                     res.status(200).json({state:301,msg:'账号已存在',data:{}});
@@ -19,8 +18,7 @@ export default{
                     })
                     user.save(function(e,s){
                         if(e){
-                            console.log('error'+e)
-                            res.status(500);
+                            next(e);
                         }else{
                             res.status(200).json({state:200,msg:'注册成功',data:{}});
                         }
@@ -29,19 +27,17 @@ export default{
             }
         })
     },
-    login(req,res){
+    login(req,res,next){
         let username=req.body.name;
         let userpassword=req.body.password;
         db.users.find({'username':username},function(e,s){
             if(e){
-                console.log('error'+e);
-                res.status(500);
+                next(e);
             }else{
                 if(s.length>=1){
                     db.users.find({'username':username,'userpassword':userpassword},function(e,s){
                         if(e){
-                            console.log('error'+e);
-                            res.status(500);
+                            next(e);
                         }else{
                             if(s.length===1){
                                 res.status(200).json({state:200,msg:'登录成功',data:{}});
@@ -56,7 +52,7 @@ export default{
             }
         })
     },
-    alllist(req,res){
+    alllist(req,res,next){
 //         let blog=new db.blogs({
 //             bid:util.creatbid(),
 //             title:'第一个博客',
@@ -82,25 +78,23 @@ export default{
 //         })
         db.blogs.find({},function(e,s){
             if(e){
-                console.log('error'+e);
-                res.status(500);
+                next(e);
             }else{
                 res.status(200).json({state:200,msg:'查询成功',data:s});
             }
         })
     },
-    content(req,res){
+    content(req,res,next){
         let bid=req.body.bid;
         db.blogs.find({'bid':bid},function(e,s){
             if(e){
-                console.log('error'+e);
-                res.status(500);
+                next(e);
             }else{
                 res.status(200).json({state:200,msg:'查询成功',data:s[0]});
             }
         })
     },
-    comments(req,res){
+    comments(req,res,next){
 //         let comment=new db.comments({
 //             bid:10002,
 //             name:'1',
@@ -118,8 +112,17 @@ export default{
         let bid=req.body.bid;
         db.comments.find({'bid':bid},function(e,s){
             if(e){
-                console.log('error'+e);
-                res.status(500);
+                next(e);
+            }else{
+                res.status(200).json({state:200,msg:'查询成功',data:s});
+            }
+        })
+    },
+    personlist(req,res,next){
+        let author=req.body.author;
+        db.blogs.find({'author':author},function(e,s){
+            if(e){
+                next(e);
             }else{
                 res.status(200).json({state:200,msg:'查询成功',data:s});
             }

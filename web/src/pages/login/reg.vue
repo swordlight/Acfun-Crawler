@@ -22,7 +22,7 @@
     </div>
 </template>
 <script>
-    import util from '../../lib/util';
+    import {request} from '../../lib/util';
     export default{
         data(){
             var name=(rule,value,callback)=>{
@@ -31,8 +31,13 @@
                 }else{
                     if(/\s/g.test(value)){
                         callback(new Error('非法字符'));
+                    }else{
+                        if(value.length<3){
+                            callback(new Error('请设置3个以上字符'))
+                        }else{
+                            callback();
+                        }
                     }
-                    callback();
                 }
             };
             var password=(rule,value,callback)=>{
@@ -41,8 +46,13 @@
                 }else{
                     if(/\s/g.test(value)){
                         callback(new Error('非法字符'));
+                    }else{
+                        if(value.length<3){
+                            callback(new Error('请设置3个以上字符'))
+                        }else{
+                            callback();
+                        }
                     }
-                    callback();
                 }
             };
             var check_password=(rule,value,callback)=>{
@@ -79,7 +89,7 @@
                 var self=this;
                 this.$refs.regrule.validate((valid)=>{
                     if(valid){
-                        util.request('reg',this.regrule,function(data){
+                        request('reg',this.regrule,function(data){
                             if(data.state===301){
                                 self.$message({
                                     showClose: true,

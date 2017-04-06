@@ -31,7 +31,7 @@
     </div>
 </template>
 <script>
-    import util from '../../../lib/util';
+    import {request,timetransform} from '../../../lib/util';
     export default{
         data(){
             return{
@@ -43,17 +43,17 @@
             let self=this;
             let bid=this.$store.getters.bid;
             console.log(bid);
-            util.request('content',{bid:bid},function(data){
+            request('content',{bid:bid},function(data){
                 if(data.state===200){
                     data.data.content=data.data.content.split('\n');
+                    console.log(data.data);
                     self.blog=data.data;
-                    util.request('comments',{bid:bid},function(data){
+                    request('comments',{bid:bid},function(data){
                         if(data.state===200){
-                            console.log(data.data);
                             self.comments=data.data;
                             self.comments.forEach(function(e,index){
                                 e.info=e.info.split('\n');
-                                e.timestamp=util.timetransform(e.timestamp);                                                                        
+                                e.timestamp=timetransform(e.timestamp);                                                                        
                             })
                         }
                     })

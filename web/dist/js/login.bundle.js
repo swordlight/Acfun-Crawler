@@ -63,11 +63,67 @@
 /******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 46);
+/******/ 	return __webpack_require__(__webpack_require__.s = 50);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function () {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for (var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if (item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function (modules, mediaQuery) {
+		if (typeof modules === "string") modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for (var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if (typeof id === "number") alreadyImportedModules[id] = true;
+		}
+		for (i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if (typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if (mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if (mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports) {
 
 module.exports = function normalizeComponent (
@@ -118,62 +174,6 @@ module.exports = function normalizeComponent (
     options: options
   }
 }
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
 
 
 /***/ }),
@@ -422,81 +422,90 @@ function applyToTag (styleElement, obj) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = {
-    request: function request(url, data, fn) {
-        url = 'http://localhost:3000/' + url;
-        data = JSON.stringify(data); //转为json
-        var obj = new XMLHttpRequest();
-        obj.open("POST", url, true);
-        obj.setRequestHeader("Content-type", "application/json;charset=utf-8"); // 发送信息至服务器时内容编码类型
-        obj.onreadystatechange = function () {
-            if (obj.readyState == 4 && (obj.status == 200 || obj.status == 304)) {
-                // 304未修改                
-                var responseText = JSON.parse(obj.responseText);
-                fn(responseText); //解析json
-            }
-        };
-        obj.send(data);
-    },
-    timetransform: function timetransform(timestamp) {
-        return new Date(timestamp).toLocaleString().replace(/\//g, "-");
-    }
+exports.request = request;
+exports.timetransform = timetransform;
+function request(url, data, fn) {
+    url = 'http://localhost:3000/' + url;
+    data = JSON.stringify(data); //转为json
+    var obj = new XMLHttpRequest();
+    obj.open("POST", url, true);
+    obj.setRequestHeader("Content-type", "application/json;charset=utf-8"); // 发送信息至服务器时内容编码类型
+    obj.onreadystatechange = function () {
+        if (obj.readyState == 4 && (obj.status == 200 || obj.status == 304)) {
+            // 304未修改                
+            var responseText = JSON.parse(obj.responseText);
+            fn(responseText); //解析json
+        }
+    };
+    obj.send(data);
 };
+
+function timetransform(timestamp) {
+    return new Date(timestamp).toLocaleString().replace(/\//g, "-");
+}
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 /**
  * Translates the list format produced by css-loader into something
  * easier to manipulate.
  */
-module.exports = function listToStyles (parentId, list) {
-  var styles = []
-  var newStyles = {}
+module.exports = function listToStyles(parentId, list) {
+  var styles = [];
+  var newStyles = {};
   for (var i = 0; i < list.length; i++) {
-    var item = list[i]
-    var id = item[0]
-    var css = item[1]
-    var media = item[2]
-    var sourceMap = item[3]
+    var item = list[i];
+    var id = item[0];
+    var css = item[1];
+    var media = item[2];
+    var sourceMap = item[3];
     var part = {
       id: parentId + ':' + i,
       css: css,
       media: media,
       sourceMap: sourceMap
-    }
+    };
     if (!newStyles[id]) {
-      styles.push(newStyles[id] = { id: id, parts: [part] })
+      styles.push(newStyles[id] = { id: id, parts: [part] });
     } else {
-      newStyles[id].parts.push(part)
+      newStyles[id].parts.push(part);
     }
   }
-  return styles
-}
-
+  return styles;
+};
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "./img/logo_icon.2f0782.png";
+module.exports = __webpack_require__.p + "img/logo_icon.2f0782.png";
 
 /***/ }),
 /* 6 */,
 /* 7 */,
 /* 8 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(42)
+__webpack_require__(45)
 
-var Component = __webpack_require__(0)(
+var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(15),
+  __webpack_require__(16),
   /* template */
-  __webpack_require__(35),
+  __webpack_require__(38),
   /* scopeId */
   "data-v-0eca552b",
   /* cssModules */
@@ -523,18 +532,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(40)
+__webpack_require__(43)
 
-var Component = __webpack_require__(0)(
+var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(16),
+  __webpack_require__(17),
   /* template */
-  __webpack_require__(33),
+  __webpack_require__(36),
   /* scopeId */
   "data-v-049e71f3",
   /* cssModules */
@@ -561,18 +570,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(45)
+__webpack_require__(49)
 
-var Component = __webpack_require__(0)(
+var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(17),
+  __webpack_require__(18),
   /* template */
-  __webpack_require__(39),
+  __webpack_require__(42),
   /* scopeId */
   "data-v-7ed0221e",
   /* cssModules */
@@ -599,11 +608,11 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 11 */,
 /* 12 */,
 /* 13 */,
 /* 14 */,
-/* 15 */
+/* 15 */,
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -629,7 +638,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = {};
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -640,10 +649,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _util = __webpack_require__(3);
-
-var _util2 = _interopRequireDefault(_util);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
     data: function data() {
@@ -680,7 +685,7 @@ exports.default = {
             var self = this;
             this.$refs.loginrule.validate(function (valid) {
                 if (valid) {
-                    _util2.default.request('login', _this.loginrule, function (data) {
+                    (0, _util.request)('login', _this.loginrule, function (data) {
                         switch (data.state) {
                             case 301:
                                 self.$message({
@@ -743,7 +748,7 @@ exports.default = {
 //
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -755,10 +760,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _util = __webpack_require__(3);
 
-var _util2 = _interopRequireDefault(_util);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 exports.default = {
     data: function data() {
         var _this = this;
@@ -769,8 +770,13 @@ exports.default = {
             } else {
                 if (/\s/g.test(value)) {
                     callback(new Error('非法字符'));
+                } else {
+                    if (value.length < 3) {
+                        callback(new Error('请设置3个以上字符'));
+                    } else {
+                        callback();
+                    }
                 }
-                callback();
             }
         };
         var password = function password(rule, value, callback) {
@@ -779,8 +785,13 @@ exports.default = {
             } else {
                 if (/\s/g.test(value)) {
                     callback(new Error('非法字符'));
+                } else {
+                    if (value.length < 3) {
+                        callback(new Error('请设置3个以上字符'));
+                    } else {
+                        callback();
+                    }
                 }
-                callback();
             }
         };
         var check_password = function check_password(rule, value, callback) {
@@ -814,7 +825,7 @@ exports.default = {
             var self = this;
             this.$refs.regrule.validate(function (valid) {
                 if (valid) {
-                    _util2.default.request('reg', _this2.regrule, function (data) {
+                    (0, _util.request)('reg', _this2.regrule, function (data) {
                         if (data.state === 301) {
                             self.$message({
                                 showClose: true,
@@ -866,16 +877,16 @@ exports.default = {
 //
 
 /***/ }),
-/* 18 */,
 /* 19 */,
 /* 20 */,
 /* 21 */,
 /* 22 */,
 /* 23 */,
-/* 24 */
+/* 24 */,
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -886,27 +897,28 @@ exports.push([module.i, "\nheader[data-v-049e71f3] {\n  width: 100%;\n  height: 
 
 
 /***/ }),
-/* 25 */,
-/* 26 */
+/* 26 */,
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
 // module
-exports.push([module.i, "\n.container[data-v-0eca552b] {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.container .header[data-v-0eca552b] {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.container .article[data-v-0eca552b] {\n  height: 400px;\n  width: 980px;\n  margin: auto;\n  margin-top: 100px;\n}\n.container .article .login-img[data-v-0eca552b] {\n  float: left;\n  width: 420px;\n  height: 320px;\n  background: url(" + __webpack_require__(31) + ");\n  background-size: 100% 100%;\n  background-repeat: no-repeat;\n  box-shadow: 0 0 70px 10px #f9f9f9 inset;\n}\n.container .article .login-reg[data-v-0eca552b] {\n  float: right;\n  width: 40%;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/app.vue"],"names":[],"mappings":";AAAA;EACE,mBAAmB;EACnB,YAAY;EACZ,aAAa;CACd;AACD;EACE,YAAY;EACZ,aAAa;EACb,iCAAiC;CAClC;AACD;EACE,cAAc;EACd,aAAa;EACb,aAAa;EACb,kBAAkB;CACnB;AACD;EACE,YAAY;EACZ,aAAa;EACb,cAAc;EACd,0CAAyD;EACzD,2BAA2B;EAC3B,6BAA6B;EAC7B,wCAAwC;CACzC;AACD;EACE,aAAa;EACb,WAAW;CACZ","file":"app.vue","sourcesContent":[".container {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.container .header {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.container .article {\n  height: 400px;\n  width: 980px;\n  margin: auto;\n  margin-top: 100px;\n}\n.container .article .login-img {\n  float: left;\n  width: 420px;\n  height: 320px;\n  background: url('../../../assets/img/login-420-320.jpg');\n  background-size: 100% 100%;\n  background-repeat: no-repeat;\n  box-shadow: 0 0 70px 10px #f9f9f9 inset;\n}\n.container .article .login-reg {\n  float: right;\n  width: 40%;\n}\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.container[data-v-0eca552b] {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.container .header[data-v-0eca552b] {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.container .article[data-v-0eca552b] {\n  height: 400px;\n  width: 980px;\n  margin: auto;\n  margin-top: 100px;\n}\n.container .article .login-img[data-v-0eca552b] {\n  float: left;\n  width: 420px;\n  height: 320px;\n  background: url(" + __webpack_require__(34) + ");\n  background-size: 100% 100%;\n  background-repeat: no-repeat;\n  box-shadow: 0 0 70px 10px #f9f9f9 inset;\n}\n.container .article .login-reg[data-v-0eca552b] {\n  float: right;\n  width: 40%;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/login/app.vue"],"names":[],"mappings":";AAAA;EACE,mBAAmB;EACnB,YAAY;EACZ,aAAa;CACd;AACD;EACE,YAAY;EACZ,aAAa;EACb,iCAAiC;CAClC;AACD;EACE,cAAc;EACd,aAAa;EACb,aAAa;EACb,kBAAkB;CACnB;AACD;EACE,YAAY;EACZ,aAAa;EACb,cAAc;EACd,0CAAyD;EACzD,2BAA2B;EAC3B,6BAA6B;EAC7B,wCAAwC;CACzC;AACD;EACE,aAAa;EACb,WAAW;CACZ","file":"app.vue","sourcesContent":[".container {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.container .header {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.container .article {\n  height: 400px;\n  width: 980px;\n  margin: auto;\n  margin-top: 100px;\n}\n.container .article .login-img {\n  float: left;\n  width: 420px;\n  height: 320px;\n  background: url('../../../assets/img/login-420-320.jpg');\n  background-size: 100% 100%;\n  background-repeat: no-repeat;\n  box-shadow: 0 0 70px 10px #f9f9f9 inset;\n}\n.container .article .login-reg {\n  float: right;\n  width: 40%;\n}\n"],"sourceRoot":""}]);
 
 // exports
 
 
 /***/ }),
-/* 27 */,
 /* 28 */,
-/* 29 */
+/* 29 */,
+/* 30 */,
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -917,15 +929,16 @@ exports.push([module.i, "\nheader[data-v-7ed0221e] {\n  width: 100%;\n  height: 
 
 
 /***/ }),
-/* 30 */,
-/* 31 */
+/* 32 */,
+/* 33 */,
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "./img/login-420-320.6991e9.jpg";
+module.exports = __webpack_require__.p + "img/login-420-320.6991e9.jpg";
 
 /***/ }),
-/* 32 */,
-/* 33 */
+/* 35 */,
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -1015,8 +1028,8 @@ if (false) {
 }
 
 /***/ }),
-/* 34 */,
-/* 35 */
+/* 37 */,
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -1041,10 +1054,10 @@ if (false) {
 }
 
 /***/ }),
-/* 36 */,
-/* 37 */,
-/* 38 */,
-/* 39 */
+/* 39 */,
+/* 40 */,
+/* 41 */,
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -1136,13 +1149,13 @@ if (false) {
 }
 
 /***/ }),
-/* 40 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(24);
+var content = __webpack_require__(25);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -1162,14 +1175,14 @@ if(false) {
 }
 
 /***/ }),
-/* 41 */,
-/* 42 */
+/* 44 */,
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(26);
+var content = __webpack_require__(27);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -1189,15 +1202,16 @@ if(false) {
 }
 
 /***/ }),
-/* 43 */,
-/* 44 */,
-/* 45 */
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(29);
+var content = __webpack_require__(31);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -1217,24 +1231,24 @@ if(false) {
 }
 
 /***/ }),
-/* 46 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _app = __webpack_require__(8);
+var _app = __webpack_require__(9);
 
 var _app2 = _interopRequireDefault(_app);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+__webpack_require__(8);
 
-// import '../../assets/css/login.css';
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 Vue.use(VueRouter); //调用vuerouter
 
 var routes = [//创建路由
-{ path: '/login', component: __webpack_require__(9) }, { path: '/reg', component: __webpack_require__(10) }, { path: '/', redirect: '/login' }];
+{ path: '/login', component: __webpack_require__(10) }, { path: '/reg', component: __webpack_require__(11) }, { path: '/', redirect: '/login' }];
 
 var router = new VueRouter({ //创建router实例
     routes: routes

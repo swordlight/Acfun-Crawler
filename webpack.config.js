@@ -2,8 +2,8 @@ var path=require('path');
 var ExtractTextPlugin=require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-let extract_css = new ExtractTextPlugin('./web/dist/css/[name].css'); //css抽取
-let extract_vue_css = new ExtractTextPlugin('./web/dist/css/vue/[name].vue.css');
+let extract_css = new ExtractTextPlugin({filename:'css/[name].css',allChunks:true}); //css抽取   基于公共输出路径 web/dist/
+let extract_vue_css = new ExtractTextPlugin({filename:'css/vue/[name].vue.css',allChunks:true}); //vue的css抽取
 
 var option = {
     entry: {
@@ -27,36 +27,57 @@ var option = {
         rules: [
             {
                 test: /\.vue$/,
-                loader: 'vue-loader',
-                options:{
-                    less:extract_vue_css.extract({use:['vue-style-loader', 'css-loader', 'less-loader']}),
-                    css:extract_vue_css.extract({use:['vue-style-loader', 'css-loader']})
-                }
+                use:[{
+                    loader: 'vue-loader',
+                    // options:{
+                    //     loaders:{  //抽取vue中css
+                    //         less:extract_vue_css.extract({
+                    //             use:['css-loader','less-loader']
+                    //         }),
+                    //         css:extract_vue_css.extract({
+                    //             use:['css-loader']
+                    //         })
+                    //     }
+                        
+                    // }
+                }]
             },
             {
                 test: /\.js$/,
-                loader: 'babel-loader',
-                include: [path.resolve('./web/src')],
-                query: {
-                    presets: ['es2015', 'stage-0']
-                },
-                exclude: /node_modules/
+                use:[{
+                    loader: 'babel-loader',
+                    // include: [path.resolve('./web/src')],
+                    options: {
+                        presets: ['es2015', 'stage-0']
+                    },
+                    // exclude: /node_modules/
+                }]
             },
             {
                 test: /\.css$/,
-                loader: extract_css.extract({use:['style-loader','css-loader','autoprefixer-loader']})
+                use:extract_css.extract({
+                    fallback:'style-loader',
+                    use:['css-loader','autoprefixer-loader']
+                })
             },
             {
                 test: /\.less$/,
-                loader: extract_css.extract({use:['style-loader','css-loader','less-loader','autoprefixer-loader']})
+                use:extract_css.extract({
+                    fallback:'style-loader',
+                    use:['css-loader','less-loader','autoprefixer-loader']
+                })
             },
             {
                 test: /\.(?:jpg|png|gif)$/,
-                loader: 'file-loader?name=./img/[name].[hash:6].[ext]'
+                use:[{
+                    loader:'file-loader?name=img/[name].[hash:6].[ext]'
+                }]
             },
             {
                 test: /\.(woff|woff2|svg|eot|ttf)\??.*$/,
-                loader: 'file-loader?name=./iconfont/[name].[hash:6].[ext]'
+                use:[{
+                    loader:'file-loader?name=iconfont/[name].[hash:6].[ext]'
+                }]
             }
         ]
     },
@@ -84,7 +105,7 @@ var option = {
     ]
 }
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {   //开发环境
     option.devtool = false
 }
 

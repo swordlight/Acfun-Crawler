@@ -13,25 +13,16 @@
     </div>
 </template>
 <script>
-    import util from '../../../lib/util'
+    import {request} from '../../../lib/util'
     export default{
         data(){
             return{
-                alllist:[
-                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'},
-                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'},
-                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'},
-                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'},
-                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'},
-                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'},
-                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'},
-                    {title:'主标题',author:'赵大树',timestamp:'2017年3月30日',viewnumber:'20',comment:'300',subtitle:'副标题'}
-                ]
+                alllist:[]
             }
         },
         created(){
             let self=this;
-            util.request('alllist',{},function(data){
+            request('alllist',{},function(data){
                 if(data.state===200){
                     self.alllist=data.data;
                 }

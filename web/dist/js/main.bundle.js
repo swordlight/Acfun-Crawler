@@ -63,11 +63,67 @@
 /******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 47);
+/******/ 	return __webpack_require__(__webpack_require__.s = 51);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function () {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for (var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if (item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function (modules, mediaQuery) {
+		if (typeof modules === "string") modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for (var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if (typeof id === "number") alreadyImportedModules[id] = true;
+		}
+		for (i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if (typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if (mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if (mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports) {
 
 module.exports = function normalizeComponent (
@@ -118,62 +174,6 @@ module.exports = function normalizeComponent (
     options: options
   }
 }
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
 
 
 /***/ }),
@@ -422,66 +422,69 @@ function applyToTag (styleElement, obj) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = {
-    request: function request(url, data, fn) {
-        url = 'http://localhost:3000/' + url;
-        data = JSON.stringify(data); //转为json
-        var obj = new XMLHttpRequest();
-        obj.open("POST", url, true);
-        obj.setRequestHeader("Content-type", "application/json;charset=utf-8"); // 发送信息至服务器时内容编码类型
-        obj.onreadystatechange = function () {
-            if (obj.readyState == 4 && (obj.status == 200 || obj.status == 304)) {
-                // 304未修改                
-                var responseText = JSON.parse(obj.responseText);
-                fn(responseText); //解析json
-            }
-        };
-        obj.send(data);
-    },
-    timetransform: function timetransform(timestamp) {
-        return new Date(timestamp).toLocaleString().replace(/\//g, "-");
-    }
+exports.request = request;
+exports.timetransform = timetransform;
+function request(url, data, fn) {
+    url = 'http://localhost:3000/' + url;
+    data = JSON.stringify(data); //转为json
+    var obj = new XMLHttpRequest();
+    obj.open("POST", url, true);
+    obj.setRequestHeader("Content-type", "application/json;charset=utf-8"); // 发送信息至服务器时内容编码类型
+    obj.onreadystatechange = function () {
+        if (obj.readyState == 4 && (obj.status == 200 || obj.status == 304)) {
+            // 304未修改                
+            var responseText = JSON.parse(obj.responseText);
+            fn(responseText); //解析json
+        }
+    };
+    obj.send(data);
 };
+
+function timetransform(timestamp) {
+    return new Date(timestamp).toLocaleString().replace(/\//g, "-");
+}
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 /**
  * Translates the list format produced by css-loader into something
  * easier to manipulate.
  */
-module.exports = function listToStyles (parentId, list) {
-  var styles = []
-  var newStyles = {}
+module.exports = function listToStyles(parentId, list) {
+  var styles = [];
+  var newStyles = {};
   for (var i = 0; i < list.length; i++) {
-    var item = list[i]
-    var id = item[0]
-    var css = item[1]
-    var media = item[2]
-    var sourceMap = item[3]
+    var item = list[i];
+    var id = item[0];
+    var css = item[1];
+    var media = item[2];
+    var sourceMap = item[3];
     var part = {
       id: parentId + ':' + i,
       css: css,
       media: media,
       sourceMap: sourceMap
-    }
+    };
     if (!newStyles[id]) {
-      styles.push(newStyles[id] = { id: id, parts: [part] })
+      styles.push(newStyles[id] = { id: id, parts: [part] });
     } else {
-      newStyles[id].parts.push(part)
+      newStyles[id].parts.push(part);
     }
   }
-  return styles
-}
-
+  return styles;
+};
 
 /***/ }),
 /* 5 */,
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "./img/poster.ab4da0.gif";
+module.exports = __webpack_require__.p + "img/poster.fbad00.gif";
 
 /***/ }),
 /* 7 */
@@ -494,11 +497,11 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _mutationsTypes = __webpack_require__(23);
+var _mutationsTypes = __webpack_require__(24);
 
 var _mutationsTypes2 = _interopRequireDefault(_mutationsTypes);
 
-var _main = __webpack_require__(22);
+var _main = __webpack_require__(23);
 
 var _main2 = _interopRequireDefault(_main);
 
@@ -541,18 +544,19 @@ exports.default = new Vuex.Store({
 /* 8 */,
 /* 9 */,
 /* 10 */,
-/* 11 */
+/* 11 */,
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(44)
+__webpack_require__(47)
 
-var Component = __webpack_require__(0)(
+var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(18),
+  __webpack_require__(19),
   /* template */
-  __webpack_require__(37),
+  __webpack_require__(40),
   /* scopeId */
   "data-v-49177ace",
   /* cssModules */
@@ -579,18 +583,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(41)
+__webpack_require__(44)
 
-var Component = __webpack_require__(0)(
+var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(19),
+  __webpack_require__(20),
   /* template */
-  __webpack_require__(34),
+  __webpack_require__(37),
   /* scopeId */
   "data-v-0a11a56a",
   /* cssModules */
@@ -617,18 +621,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(43)
+__webpack_require__(46)
 
-var Component = __webpack_require__(0)(
+var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(20),
+  __webpack_require__(21),
   /* template */
-  __webpack_require__(36),
+  __webpack_require__(39),
   /* scopeId */
   "data-v-33b5940d",
   /* cssModules */
@@ -655,16 +659,20 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Component = __webpack_require__(0)(
+
+/* styles */
+__webpack_require__(48)
+
+var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(21),
+  __webpack_require__(22),
   /* template */
-  __webpack_require__(38),
+  __webpack_require__(41),
   /* scopeId */
-  null,
+  "data-v-700a6739",
   /* cssModules */
   null
 )
@@ -689,10 +697,10 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 15 */,
 /* 16 */,
 /* 17 */,
-/* 18 */
+/* 18 */,
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -704,19 +712,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _util = __webpack_require__(3);
 
-var _util2 = _interopRequireDefault(_util);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 exports.default = {
     data: function data() {
         return {
-            alllist: [{ title: '主标题', author: '赵大树', timestamp: '2017年3月30日', viewnumber: '20', comment: '300', subtitle: '副标题' }, { title: '主标题', author: '赵大树', timestamp: '2017年3月30日', viewnumber: '20', comment: '300', subtitle: '副标题' }, { title: '主标题', author: '赵大树', timestamp: '2017年3月30日', viewnumber: '20', comment: '300', subtitle: '副标题' }, { title: '主标题', author: '赵大树', timestamp: '2017年3月30日', viewnumber: '20', comment: '300', subtitle: '副标题' }, { title: '主标题', author: '赵大树', timestamp: '2017年3月30日', viewnumber: '20', comment: '300', subtitle: '副标题' }, { title: '主标题', author: '赵大树', timestamp: '2017年3月30日', viewnumber: '20', comment: '300', subtitle: '副标题' }, { title: '主标题', author: '赵大树', timestamp: '2017年3月30日', viewnumber: '20', comment: '300', subtitle: '副标题' }, { title: '主标题', author: '赵大树', timestamp: '2017年3月30日', viewnumber: '20', comment: '300', subtitle: '副标题' }]
+            alllist: []
         };
     },
     created: function created() {
         var self = this;
-        _util2.default.request('alllist', {}, function (data) {
+        (0, _util.request)('alllist', {}, function (data) {
             if (data.state === 200) {
                 self.alllist = data.data;
             }
@@ -747,7 +751,7 @@ exports.default = {
 //
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -787,7 +791,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -798,10 +802,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _util = __webpack_require__(3);
-
-var _util2 = _interopRequireDefault(_util);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
     data: function data() {
@@ -814,17 +814,17 @@ exports.default = {
         var self = this;
         var bid = this.$store.getters.bid;
         console.log(bid);
-        _util2.default.request('content', { bid: bid }, function (data) {
+        (0, _util.request)('content', { bid: bid }, function (data) {
             if (data.state === 200) {
                 data.data.content = data.data.content.split('\n');
+                console.log(data.data);
                 self.blog = data.data;
-                _util2.default.request('comments', { bid: bid }, function (data) {
+                (0, _util.request)('comments', { bid: bid }, function (data) {
                     if (data.state === 200) {
-                        console.log(data.data);
                         self.comments = data.data;
                         self.comments.forEach(function (e, index) {
                             e.info = e.info.split('\n');
-                            e.timestamp = _util2.default.timetransform(e.timestamp);
+                            e.timestamp = (0, _util.timetransform)(e.timestamp);
                         });
                     }
                 });
@@ -865,7 +865,7 @@ exports.default = {
 //
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -874,14 +874,49 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-//
-//
-//
 
-exports.default = {};
+var _util = __webpack_require__(3);
+
+exports.default = {
+    data: function data() {
+        return {
+            personlist: []
+        };
+    },
+    created: function created() {
+        var self = this;
+        (0, _util.request)('personlist', { author: '赵大树' }, function (data) {
+            if (data.state === 200) {
+                self.personlist = data.data;
+            }
+        });
+    },
+
+    methods: {
+        lookarticle: function lookarticle(index) {
+            var self = this;
+            var bid = this.personlist[index].bid;
+            this.$store.dispatch('setbid', bid); //修改vuex博客id
+            this.$router.push('/content');
+        }
+    }
+}; //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -903,7 +938,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -917,11 +952,11 @@ exports.default = {
 };
 
 /***/ }),
-/* 24 */,
-/* 25 */
+/* 25 */,
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -932,11 +967,11 @@ exports.push([module.i, "\n.container[data-v-0a11a56a] {\n  position: relative;\
 
 
 /***/ }),
-/* 26 */,
-/* 27 */
+/* 27 */,
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -947,10 +982,10 @@ exports.push([module.i, "\nheader[data-v-33b5940d] {\n  height: 115px;\n  border
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -961,22 +996,42 @@ exports.push([module.i, "\n.content[data-v-49177ace] {\n  margin-top: 30px;\n}\n
 
 
 /***/ }),
-/* 29 */,
 /* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "./img/blogtop.5b8d3e.gif";
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.content[data-v-700a6739] {\n  margin-top: 30px;\n}\n.content .item[data-v-700a6739] {\n  margin-top: 20px;\n}\n.content .item .title[data-v-700a6739] {\n  margin-top: 20px;\n  font-size: 20px;\n  color: #0187c5;\n  text-decoration: none;\n}\n.content .item a[data-v-700a6739]:hover {\n  color: #c66;\n}\n.content .item .des[data-v-700a6739] {\n  margin-top: 15px;\n  margin-left: 30px;\n}\n.content .item .subtitle[data-v-700a6739] {\n  font-size: 15px;\n  margin-top: 15px;\n  margin-left: 30px;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/main/personlist/personlist.vue"],"names":[],"mappings":";AAAA;EACE,iBAAiB;CAClB;AACD;EACE,iBAAiB;CAClB;AACD;EACE,iBAAiB;EACjB,gBAAgB;EAChB,eAAe;EACf,sBAAsB;CACvB;AACD;EACE,YAAY;CACb;AACD;EACE,iBAAiB;EACjB,kBAAkB;CACnB;AACD;EACE,gBAAgB;EAChB,iBAAiB;EACjB,kBAAkB;CACnB","file":"personlist.vue","sourcesContent":[".content {\n  margin-top: 30px;\n}\n.content .item {\n  margin-top: 20px;\n}\n.content .item .title {\n  margin-top: 20px;\n  font-size: 20px;\n  color: #0187c5;\n  text-decoration: none;\n}\n.content .item a:hover {\n  color: #c66;\n}\n.content .item .des {\n  margin-top: 15px;\n  margin-left: 30px;\n}\n.content .item .subtitle {\n  font-size: 15px;\n  margin-top: 15px;\n  margin-left: 30px;\n}\n"],"sourceRoot":""}]);
+
+// exports
+
 
 /***/ }),
 /* 31 */,
 /* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "./img/logo-new.f2c7f7.png";
+module.exports = __webpack_require__.p + "img/biaoqing.f96184.gif";
 
 /***/ }),
-/* 33 */,
-/* 34 */
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/blogtop.5b8d3e.gif";
+
+/***/ }),
+/* 34 */,
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/logo-new.f2c7f7.png";
+
+/***/ }),
+/* 36 */,
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -993,7 +1048,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('img', {
     staticClass: "logo",
     attrs: {
-      "src": __webpack_require__(32),
+      "src": __webpack_require__(35),
       "alt": "AcFun",
       "title": "AcFun"
     }
@@ -1060,14 +1115,14 @@ if (false) {
 }
 
 /***/ }),
-/* 35 */,
-/* 36 */
+/* 38 */,
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', [_c('header', [_c('img', {
     attrs: {
-      "src": __webpack_require__(30),
+      "src": __webpack_require__(33),
       "alt": "博客"
     }
   }), _vm._v(" "), _c('h1', [_vm._v(_vm._s(_vm.blog.title))]), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.blog.viewnumber) + "围观·" + _vm._s(_vm.blog.comment) + "评论· / 发布于 " + _vm._s(_vm.blog.timestamp))])]), _vm._v(" "), _c('article', _vm._l((_vm.blog.content), function(p) {
@@ -1099,7 +1154,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "comment_poster"
   }, [_c('img', {
     attrs: {
-      "src": __webpack_require__(48),
+      "src": __webpack_require__(32),
       "alt": "评论"
     }
   })])
@@ -1113,7 +1168,7 @@ if (false) {
 }
 
 /***/ }),
-/* 37 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -1156,11 +1211,39 @@ if (false) {
 }
 
 /***/ }),
-/* 38 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_vm._v("personlist")])
+  return _c('div', {
+    staticClass: "content"
+  }, _vm._l((_vm.personlist), function(item, index) {
+    return _c('div', {
+      staticClass: "item"
+    }, [_c('a', {
+      staticClass: "title",
+      attrs: {
+        "href": "javascript:void(null)"
+      },
+      on: {
+        "click": function($event) {
+          _vm.lookarticle(index)
+        }
+      }
+    }, [_vm._v(_vm._s(item.title))]), _vm._v(" "), _c('el-breadcrumb', {
+      staticClass: "des"
+    }, [_c('el-breadcrumb-item', {
+      staticClass: "author"
+    }, [_vm._v("作者" + _vm._s(item.author))]), _vm._v(" "), _c('el-breadcrumb-item', {
+      staticClass: "timestamp"
+    }, [_vm._v("时间" + _vm._s(item.timestamp))]), _vm._v(" "), _c('el-breadcrumb-item', {
+      staticClass: "comment"
+    }, [_vm._v(_vm._s(item.comment) + "个评论")]), _vm._v(" "), _c('el-breadcrumb-item', {
+      staticClass: "viewnumber"
+    }, [_vm._v(_vm._s(item.viewnumber) + "次阅读")])], 1), _vm._v(" "), _c('p', {
+      staticClass: "subtitle"
+    }, [_vm._v(_vm._s(item.subtitle))])], 1)
+  }))
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -1171,15 +1254,15 @@ if (false) {
 }
 
 /***/ }),
-/* 39 */,
-/* 40 */,
-/* 41 */
+/* 42 */,
+/* 43 */,
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(25);
+var content = __webpack_require__(26);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -1199,14 +1282,14 @@ if(false) {
 }
 
 /***/ }),
-/* 42 */,
-/* 43 */
+/* 45 */,
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(27);
+var content = __webpack_require__(28);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -1226,13 +1309,13 @@ if(false) {
 }
 
 /***/ }),
-/* 44 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(28);
+var content = __webpack_require__(29);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -1252,15 +1335,41 @@ if(false) {
 }
 
 /***/ }),
-/* 45 */,
-/* 46 */,
-/* 47 */
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(30);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("0fcabb0e", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../node_modules/vue-loader/lib/style-rewriter.js?{\"id\":\"data-v-700a6739\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../../node_modules/less-loader/lib/loader.js!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./personlist.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../node_modules/vue-loader/lib/style-rewriter.js?{\"id\":\"data-v-700a6739\",\"scoped\":true,\"hasInlineConfig\":false}!../../../../../node_modules/less-loader/lib/loader.js!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./personlist.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 49 */,
+/* 50 */,
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _app = __webpack_require__(12);
+var _app = __webpack_require__(13);
 
 var _app2 = _interopRequireDefault(_app);
 
@@ -1271,7 +1380,7 @@ var _store2 = _interopRequireDefault(_store);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 Vue.use(VueRouter);
-var routes = [{ path: '/alllist', component: __webpack_require__(11) }, { path: '/personlist', component: __webpack_require__(14) }, { path: '/content', component: __webpack_require__(13) }, { path: '/', redirect: '/alllist' }];
+var routes = [{ path: '/alllist', component: __webpack_require__(12) }, { path: '/personlist', component: __webpack_require__(15) }, { path: '/content', component: __webpack_require__(14) }, { path: '/', redirect: '/alllist' }];
 var router = new VueRouter({
     routes: routes
 });
@@ -1284,12 +1393,6 @@ var app = new Vue({
         App: _app2.default
     }
 });
-
-/***/ }),
-/* 48 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "./img/biaoqing.f96184.gif";
 
 /***/ })
 /******/ ]);
