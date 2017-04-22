@@ -425,7 +425,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.request = request;
 exports.timetransform = timetransform;
 function request(url, data, fn) {
-    url = 'http://localhost:3000/' + url;
+    url = 'http://localhost:4000/' + url;
     data = JSON.stringify(data); //转为json
     var obj = new XMLHttpRequest();
     obj.open("POST", url, true);
@@ -708,7 +708,7 @@ exports.default = {
                                     type: 'success'
                                 });
                                 setTimeout(function () {
-                                    window.location.href = 'http://localhost:3000/main.html';
+                                    window.location.href = 'http://localhost:4000/main.html';
                                 }, 1000);
                                 break;
                             default:
@@ -841,7 +841,7 @@ exports.default = {
                                     type: 'success'
                                 });
                                 setTimeout(function () {
-                                    window.location.href = 'http://localhost:3000/main.html';
+                                    window.location.href = 'http://localhost:4000/main.html';
                                 }, 1000);
                             }
                         }

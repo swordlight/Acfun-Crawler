@@ -5,7 +5,10 @@ export default (app,express,action)=>{
     let router=express.Router();  //路由管理中间件
     router.use(function(req,res,next){  //每个路由都会执行
         next();  //将控制权交给下一个中间件
-    })
+    });
+    router.all('/',function(req,res,next){
+        res.redirect(302,'http://localhost:4000/login.html')
+    });
     router.all('/reg',function(req,res,next){  //注册路由
         action.reg(req,res,next);
     });

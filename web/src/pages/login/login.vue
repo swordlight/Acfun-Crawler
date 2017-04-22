@@ -83,7 +83,7 @@
                                     type: 'success'
                                 });
                                 setTimeout(function(){
-                                    window.location.href='http://localhost:3000/main.html';
+                                    window.location.href='http://localhost:4000/main.html';
                                 },1000);
                                 break;
                                 default:
