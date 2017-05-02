@@ -8,6 +8,7 @@ export default (app,express,action)=>{
     });
     router.all('/',function(req,res,next){
         res.redirect(302,'http://localhost:4000/login.html')
+        next();
     });
     router.all('/reg',function(req,res,next){  //注册路由
         action.reg(req,res,next);
@@ -15,6 +16,7 @@ export default (app,express,action)=>{
     router.all('/login',function(req,res,next){  //登录路由
         action.login(req,res,next);
     });
+    router.all('/');
     router.all('/alllist',function(req,res,next){  //所有博客列表
         action.alllist(req,res,next);
     });
@@ -26,6 +28,9 @@ export default (app,express,action)=>{
     });
     router.all('/personlist',function(req,res,next){  //查看个人博客
         action.personlist(req,res,next);
+    });
+    router.all('/createBlog',function(req,res,next){  //新建博客
+        action.createBlog(req,res,next);
     });
     router.use(function(err,req,res,next){  //错误处理
         console.log('error'+err);

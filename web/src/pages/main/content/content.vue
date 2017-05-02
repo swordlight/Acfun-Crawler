@@ -43,7 +43,7 @@
             let self=this;
             let bid=this.$store.getters.bid;
             console.log(bid);
-            request('content',{bid:bid},function(data){
+            request('content',{bid:bid},self,function(data){
                 if(data.state===200){
                     data.data.content=data.data.content.split('\n');
                     console.log(data.data);

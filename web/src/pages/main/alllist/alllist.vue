@@ -22,7 +22,7 @@
         },
         created(){
             let self=this;
-            request('alllist',{},function(data){
+            request('alllist',{},self,function(data){
                 if(data.state===200){
                     self.alllist=data.data;
                 }

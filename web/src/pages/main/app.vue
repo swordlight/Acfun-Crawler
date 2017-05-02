@@ -10,6 +10,14 @@
                     </el-select>
                     <el-button slot="append" icon="search"></el-button>
                 </el-input>
+                <el-dropdown trigger="click" menu-align="start" class="dropdown">
+                    <span class="el-dropdown-link">
+                        <i class="el-icon-caret-bottom el-icon--right"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
                 <router-link to="personlist"><img class="poster" src="../../../assets/img/poster.gif" alt=""></router-link>
             </div>
         </div>
@@ -52,6 +60,12 @@
                 .poster{
                     float:right;
                     max-width:50px;
+                }
+                .dropdown{
+                    float:right;
+                    cursor:pointer;
+                    margin-left:20px;
+                    line-height:50px;
                 }
                 .search{
                     width:500px;

@@ -89,7 +89,7 @@
                 var self=this;
                 this.$refs.regrule.validate((valid)=>{
                     if(valid){
-                        request('reg',this.regrule,function(data){
+                        request('reg',this.regrule,self,function(data){
                             if(data.state===301){
                                 self.$message({
                                     showClose: true,

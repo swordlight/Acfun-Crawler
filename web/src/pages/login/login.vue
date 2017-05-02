@@ -60,16 +60,16 @@
                 var self=this;
                 this.$refs.loginrule.validate((valid)=>{
                     if(valid){
-                        request('login',this.loginrule,function(data){
+                        request('login',this.loginrule,self,function(data){
                             switch (data.state) {
-                                case 301:
+                                case 10003:
                                 self.$message({
                                     showClose: true,
                                     message: '用户名不存在',
                                     type: 'error'
                                 });
                                 break;
-                                case 302:
+                                case 10002:
                                 self.$message({
                                     showClose: true,
                                     message: '密码错误',
@@ -82,6 +82,9 @@
                                     message: '登陆成功',
                                     type: 'success'
                                 });
+                                if(data.data.token){
+                                    localStorage.setItem('token',data.data.token);
+                                }
                                 setTimeout(function(){
                                     window.location.href='http://localhost:4000/main.html';
                                 },1000);

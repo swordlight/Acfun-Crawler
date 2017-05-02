@@ -424,8 +424,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.request = request;
 exports.timetransform = timetransform;
-function request(url, data, fn) {
+function request(url, data, self, fn) {
     url = 'http://localhost:4000/' + url;
+    if (data.token) {
+        return;
+    } else {
+        data.token = localStorage.getItem('token');
+    };
     data = JSON.stringify(data); //转为json
     var obj = new XMLHttpRequest();
     obj.open("POST", url, true);
@@ -434,6 +439,12 @@ function request(url, data, fn) {
         if (obj.readyState == 4 && (obj.status == 200 || obj.status == 304)) {
             // 304未修改                
             var responseText = JSON.parse(obj.responseText);
+            console.log(responseText);
+            if (responseText.state === 10051) {
+                self.$message.error('token失效，请重新登录');
+            } else if (responseText.state === 10052) {
+                self.$message.error('token错误，请登录后再操作');
+            }
             fn(responseText); //解析json
         }
     };
@@ -685,16 +696,16 @@ exports.default = {
             var self = this;
             this.$refs.loginrule.validate(function (valid) {
                 if (valid) {
-                    (0, _util.request)('login', _this.loginrule, function (data) {
+                    (0, _util.request)('login', _this.loginrule, self, function (data) {
                         switch (data.state) {
-                            case 301:
+                            case 10003:
                                 self.$message({
                                     showClose: true,
                                     message: '用户名不存在',
                                     type: 'error'
                                 });
                                 break;
-                            case 302:
+                            case 10002:
                                 self.$message({
                                     showClose: true,
                                     message: '密码错误',
@@ -707,6 +718,9 @@ exports.default = {
                                     message: '登陆成功',
                                     type: 'success'
                                 });
+                                if (data.data.token) {
+                                    localStorage.setItem('token', data.data.token);
+                                }
                                 setTimeout(function () {
                                     window.location.href = 'http://localhost:4000/main.html';
                                 }, 1000);
@@ -825,7 +839,7 @@ exports.default = {
             var self = this;
             this.$refs.regrule.validate(function (valid) {
                 if (valid) {
-                    (0, _util.request)('reg', _this2.regrule, function (data) {
+                    (0, _util.request)('reg', _this2.regrule, self, function (data) {
                         if (data.state === 301) {
                             self.$message({
                                 showClose: true,

@@ -424,8 +424,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.request = request;
 exports.timetransform = timetransform;
-function request(url, data, fn) {
+function request(url, data, self, fn) {
     url = 'http://localhost:4000/' + url;
+    if (data.token) {
+        return;
+    } else {
+        data.token = localStorage.getItem('token');
+    };
     data = JSON.stringify(data); //转为json
     var obj = new XMLHttpRequest();
     obj.open("POST", url, true);
@@ -434,6 +439,12 @@ function request(url, data, fn) {
         if (obj.readyState == 4 && (obj.status == 200 || obj.status == 304)) {
             // 304未修改                
             var responseText = JSON.parse(obj.responseText);
+            console.log(responseText);
+            if (responseText.state === 10051) {
+                self.$message.error('token失效，请重新登录');
+            } else if (responseText.state === 10052) {
+                self.$message.error('token错误，请登录后再操作');
+            }
             fn(responseText); //解析json
         }
     };
@@ -720,7 +731,7 @@ exports.default = {
     },
     created: function created() {
         var self = this;
-        (0, _util.request)('alllist', {}, function (data) {
+        (0, _util.request)('alllist', {}, self, function (data) {
             if (data.state === 200) {
                 self.alllist = data.data;
             }
@@ -780,6 +791,14 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 exports.default = {
     data: function data() {
@@ -814,7 +833,7 @@ exports.default = {
         var self = this;
         var bid = this.$store.getters.bid;
         console.log(bid);
-        (0, _util.request)('content', { bid: bid }, function (data) {
+        (0, _util.request)('content', { bid: bid }, self, function (data) {
             if (data.state === 200) {
                 data.data.content = data.data.content.split('\n');
                 console.log(data.data);
@@ -880,12 +899,23 @@ var _util = __webpack_require__(3);
 exports.default = {
     data: function data() {
         return {
-            personlist: []
+            personlist: [],
+            createBlog: false,
+            ruleForm: {
+                title: '',
+                subtitle: '',
+                context: ''
+            },
+            rules: {
+                title: [{ required: true, message: '标题不能为空', trigger: 'blur' }],
+                subtitle: [{ required: true, message: '副标题不能为空', trigger: 'blur' }],
+                context: [{ required: true, message: '博客内容不能为空', trigger: 'blur' }]
+            }
         };
     },
     created: function created() {
         var self = this;
-        (0, _util.request)('personlist', { author: '赵大树' }, function (data) {
+        (0, _util.request)('personlist', { author: '赵大树' }, self, function (data) {
             if (data.state === 200) {
                 self.personlist = data.data;
             }
@@ -898,9 +928,41 @@ exports.default = {
             var bid = this.personlist[index].bid;
             this.$store.dispatch('setbid', bid); //修改vuex博客id
             this.$router.push('/content');
+        },
+        ok: function ok() {
+            this.$message.success('提交成功');
+            this.$refs['ruleForm'].resetFields();
+            this.createBlog = false;
+        },
+        cancel: function cancel() {
+            this.$refs['ruleForm'].resetFields();
+            this.createBlog = false;
         }
     }
 }; //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -961,7 +1023,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "\n.container[data-v-0a11a56a] {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.container .header[data-v-0a11a56a] {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.container .header .top[data-v-0a11a56a] {\n  width: 980px;\n  height: 100%;\n  margin: auto;\n  text-align: center;\n}\n.container .header .top .logo[data-v-0a11a56a] {\n  float: left;\n  padding: 10px 0 10px;\n}\n.container .header .top .poster[data-v-0a11a56a] {\n  float: right;\n  max-width: 50px;\n}\n.container .header .top .search[data-v-0a11a56a] {\n  width: 500px;\n  margin-top: 5px;\n}\n.container .header .top .search .select[data-v-0a11a56a] {\n  width: 100px;\n}\n.container .article[data-v-0a11a56a] {\n  width: 980px;\n  margin: auto;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/main/app.vue"],"names":[],"mappings":";AAAA;EACE,mBAAmB;EACnB,YAAY;EACZ,aAAa;CACd;AACD;EACE,YAAY;EACZ,aAAa;EACb,iCAAiC;CAClC;AACD;EACE,aAAa;EACb,aAAa;EACb,aAAa;EACb,mBAAmB;CACpB;AACD;EACE,YAAY;EACZ,qBAAqB;CACtB;AACD;EACE,aAAa;EACb,gBAAgB;CACjB;AACD;EACE,aAAa;EACb,gBAAgB;CACjB;AACD;EACE,aAAa;CACd;AACD;EACE,aAAa;EACb,aAAa;CACd","file":"app.vue","sourcesContent":[".container {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.container .header {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.container .header .top {\n  width: 980px;\n  height: 100%;\n  margin: auto;\n  text-align: center;\n}\n.container .header .top .logo {\n  float: left;\n  padding: 10px 0 10px;\n}\n.container .header .top .poster {\n  float: right;\n  max-width: 50px;\n}\n.container .header .top .search {\n  width: 500px;\n  margin-top: 5px;\n}\n.container .header .top .search .select {\n  width: 100px;\n}\n.container .article {\n  width: 980px;\n  margin: auto;\n}\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.container[data-v-0a11a56a] {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.container .header[data-v-0a11a56a] {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.container .header .top[data-v-0a11a56a] {\n  width: 980px;\n  height: 100%;\n  margin: auto;\n  text-align: center;\n}\n.container .header .top .logo[data-v-0a11a56a] {\n  float: left;\n  padding: 10px 0 10px;\n}\n.container .header .top .poster[data-v-0a11a56a] {\n  float: right;\n  max-width: 50px;\n}\n.container .header .top .dropdown[data-v-0a11a56a] {\n  float: right;\n  cursor: pointer;\n  margin-left: 20px;\n  line-height: 50px;\n}\n.container .header .top .search[data-v-0a11a56a] {\n  width: 500px;\n  margin-top: 5px;\n}\n.container .header .top .search .select[data-v-0a11a56a] {\n  width: 100px;\n}\n.container .article[data-v-0a11a56a] {\n  width: 980px;\n  margin: auto;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/main/app.vue"],"names":[],"mappings":";AAAA;EACE,mBAAmB;EACnB,YAAY;EACZ,aAAa;CACd;AACD;EACE,YAAY;EACZ,aAAa;EACb,iCAAiC;CAClC;AACD;EACE,aAAa;EACb,aAAa;EACb,aAAa;EACb,mBAAmB;CACpB;AACD;EACE,YAAY;EACZ,qBAAqB;CACtB;AACD;EACE,aAAa;EACb,gBAAgB;CACjB;AACD;EACE,aAAa;EACb,gBAAgB;EAChB,kBAAkB;EAClB,kBAAkB;CACnB;AACD;EACE,aAAa;EACb,gBAAgB;CACjB;AACD;EACE,aAAa;CACd;AACD;EACE,aAAa;EACb,aAAa;CACd","file":"app.vue","sourcesContent":[".container {\n  position: relative;\n  width: 100%;\n  height: auto;\n}\n.container .header {\n  width: 100%;\n  height: 48px;\n  border-bottom: 1px #FFA5C7 solid;\n}\n.container .header .top {\n  width: 980px;\n  height: 100%;\n  margin: auto;\n  text-align: center;\n}\n.container .header .top .logo {\n  float: left;\n  padding: 10px 0 10px;\n}\n.container .header .top .poster {\n  float: right;\n  max-width: 50px;\n}\n.container .header .top .dropdown {\n  float: right;\n  cursor: pointer;\n  margin-left: 20px;\n  line-height: 50px;\n}\n.container .header .top .search {\n  width: 500px;\n  margin-top: 5px;\n}\n.container .header .top .search .select {\n  width: 100px;\n}\n.container .article {\n  width: 980px;\n  margin: auto;\n}\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -1004,7 +1066,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "\n.content[data-v-700a6739] {\n  margin-top: 30px;\n}\n.content .item[data-v-700a6739] {\n  margin-top: 20px;\n}\n.content .item .title[data-v-700a6739] {\n  margin-top: 20px;\n  font-size: 20px;\n  color: #0187c5;\n  text-decoration: none;\n}\n.content .item a[data-v-700a6739]:hover {\n  color: #c66;\n}\n.content .item .des[data-v-700a6739] {\n  margin-top: 15px;\n  margin-left: 30px;\n}\n.content .item .subtitle[data-v-700a6739] {\n  font-size: 15px;\n  margin-top: 15px;\n  margin-left: 30px;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/main/personlist/personlist.vue"],"names":[],"mappings":";AAAA;EACE,iBAAiB;CAClB;AACD;EACE,iBAAiB;CAClB;AACD;EACE,iBAAiB;EACjB,gBAAgB;EAChB,eAAe;EACf,sBAAsB;CACvB;AACD;EACE,YAAY;CACb;AACD;EACE,iBAAiB;EACjB,kBAAkB;CACnB;AACD;EACE,gBAAgB;EAChB,iBAAiB;EACjB,kBAAkB;CACnB","file":"personlist.vue","sourcesContent":[".content {\n  margin-top: 30px;\n}\n.content .item {\n  margin-top: 20px;\n}\n.content .item .title {\n  margin-top: 20px;\n  font-size: 20px;\n  color: #0187c5;\n  text-decoration: none;\n}\n.content .item a:hover {\n  color: #c66;\n}\n.content .item .des {\n  margin-top: 15px;\n  margin-left: 30px;\n}\n.content .item .subtitle {\n  font-size: 15px;\n  margin-top: 15px;\n  margin-left: 30px;\n}\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.content[data-v-700a6739] {\n  margin-top: 30px;\n}\n.content .item[data-v-700a6739] {\n  margin-top: 20px;\n}\n.content .item .title[data-v-700a6739] {\n  margin-top: 20px;\n  font-size: 20px;\n  color: #0187c5;\n  text-decoration: none;\n}\n.content .item a[data-v-700a6739]:hover {\n  color: #c66;\n}\n.content .item .des[data-v-700a6739] {\n  margin-top: 15px;\n  margin-left: 30px;\n}\n.content .item .subtitle[data-v-700a6739] {\n  font-size: 15px;\n  margin-top: 15px;\n  margin-left: 30px;\n}\n.create-card[data-v-700a6739] {\n  position: fixed;\n  left: 100px;\n  bottom: 100px;\n}\n.create-card .text[data-v-700a6739] {\n  font-size: 14px;\n}\n.create-card .item[data-v-700a6739] {\n  padding: 18px 0;\n}\n.create-card .clearfix[data-v-700a6739]:before,\n.create-card .clearfix[data-v-700a6739]:after {\n  display: table;\n  content: \"\";\n}\n.create-card .clearfix[data-v-700a6739]:after {\n  clear: both;\n}\n.create-card .box-card[data-v-700a6739] {\n  width: 900px;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/main/personlist/personlist.vue"],"names":[],"mappings":";AAAA;EACE,iBAAiB;CAClB;AACD;EACE,iBAAiB;CAClB;AACD;EACE,iBAAiB;EACjB,gBAAgB;EAChB,eAAe;EACf,sBAAsB;CACvB;AACD;EACE,YAAY;CACb;AACD;EACE,iBAAiB;EACjB,kBAAkB;CACnB;AACD;EACE,gBAAgB;EAChB,iBAAiB;EACjB,kBAAkB;CACnB;AACD;EACE,gBAAgB;EAChB,YAAY;EACZ,cAAc;CACf;AACD;EACE,gBAAgB;CACjB;AACD;EACE,gBAAgB;CACjB;AACD;;EAEE,eAAe;EACf,YAAY;CACb;AACD;EACE,YAAY;CACb;AACD;EACE,aAAa;CACd","file":"personlist.vue","sourcesContent":[".content {\n  margin-top: 30px;\n}\n.content .item {\n  margin-top: 20px;\n}\n.content .item .title {\n  margin-top: 20px;\n  font-size: 20px;\n  color: #0187c5;\n  text-decoration: none;\n}\n.content .item a:hover {\n  color: #c66;\n}\n.content .item .des {\n  margin-top: 15px;\n  margin-left: 30px;\n}\n.content .item .subtitle {\n  font-size: 15px;\n  margin-top: 15px;\n  margin-left: 30px;\n}\n.create-card {\n  position: fixed;\n  left: 100px;\n  bottom: 100px;\n}\n.create-card .text {\n  font-size: 14px;\n}\n.create-card .item {\n  padding: 18px 0;\n}\n.create-card .clearfix:before,\n.create-card .clearfix:after {\n  display: table;\n  content: \"\";\n}\n.create-card .clearfix:after {\n  clear: both;\n}\n.create-card .box-card {\n  width: 900px;\n}\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -1092,7 +1154,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "icon": "search"
     },
     slot: "append"
-  })], 1), _vm._v(" "), _c('router-link', {
+  })], 1), _vm._v(" "), _c('el-dropdown', {
+    staticClass: "dropdown",
+    attrs: {
+      "trigger": "click",
+      "menu-align": "start"
+    }
+  }, [_c('span', {
+    staticClass: "el-dropdown-link"
+  }, [_c('i', {
+    staticClass: "el-icon-caret-bottom el-icon--right"
+  })]), _vm._v(" "), _c('el-dropdown-menu', {
+    slot: "dropdown"
+  }, [_c('el-dropdown-item', [_vm._v("退出登录")])], 1)], 1), _vm._v(" "), _c('router-link', {
     attrs: {
       "to": "personlist"
     }
@@ -1217,7 +1291,24 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "content"
-  }, _vm._l((_vm.personlist), function(item, index) {
+  }, [_c('div', {
+    staticStyle: {
+      "text-align": "center"
+    }
+  }, [_c('h1', {
+    staticStyle: {
+      "color": "#1D8CE0"
+    }
+  }, [_vm._v("个人中心")]), _vm._v(" "), _c('el-button', {
+    attrs: {
+      "type": "primary"
+    },
+    on: {
+      "click": function($event) {
+        _vm.createBlog = true;
+      }
+    }
+  }, [_vm._v("我要写新博客")])], 1), _vm._v(" "), _vm._l((_vm.personlist), function(item, index) {
     return _c('div', {
       staticClass: "item"
     }, [_c('a', {
@@ -1243,7 +1334,96 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_vm._v(_vm._s(item.viewnumber) + "次阅读")])], 1), _vm._v(" "), _c('p', {
       staticClass: "subtitle"
     }, [_vm._v(_vm._s(item.subtitle))])], 1)
-  }))
+  }), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.createBlog),
+      expression: "createBlog"
+    }],
+    staticClass: "create-card"
+  }, [_c('el-card', {
+    staticClass: "box-card"
+  }, [_c('el-form', {
+    ref: "ruleForm",
+    staticClass: "demo-ruleForm",
+    attrs: {
+      "model": _vm.ruleForm,
+      "rules": _vm.rules
+    }
+  }, [_c('el-form-item', {
+    attrs: {
+      "label": "标题",
+      "prop": "title"
+    }
+  }, [_c('el-input', {
+    attrs: {
+      "placeholder": "请输入标题"
+    },
+    model: {
+      value: (_vm.ruleForm.title),
+      callback: function($$v) {
+        _vm.ruleForm.title = $$v
+      },
+      expression: "ruleForm.title"
+    }
+  })], 1), _vm._v(" "), _c('el-form-item', {
+    attrs: {
+      "label": "副标题",
+      "prop": "subtitle"
+    }
+  }, [_c('el-input', {
+    attrs: {
+      "placeholder": "请输入副标题"
+    },
+    model: {
+      value: (_vm.ruleForm.subtitle),
+      callback: function($$v) {
+        _vm.ruleForm.subtitle = $$v
+      },
+      expression: "ruleForm.subtitle"
+    }
+  })], 1), _vm._v(" "), _c('el-form-item', {
+    attrs: {
+      "label": "博客内容",
+      "prop": "context"
+    }
+  }, [_c('el-input', {
+    attrs: {
+      "placeholder": "请输入内容",
+      "type": "textarea",
+      "autosize": {
+        minRows: 6,
+        maxRows: 8
+      }
+    },
+    model: {
+      value: (_vm.ruleForm.context),
+      callback: function($$v) {
+        _vm.ruleForm.context = $$v
+      },
+      expression: "ruleForm.context"
+    }
+  })], 1)], 1), _vm._v(" "), _c('div', {
+    staticStyle: {
+      "float": "right",
+      "margin-bottom": "20px"
+    }
+  }, [_c('el-button', {
+    attrs: {
+      "type": "warning"
+    },
+    on: {
+      "click": _vm.cancel
+    }
+  }, [_vm._v("取消")]), _vm._v(" "), _c('el-button', {
+    attrs: {
+      "type": "success"
+    },
+    on: {
+      "click": _vm.ok
+    }
+  }, [_vm._v("确定")])], 1)], 1)], 1)], 2)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
