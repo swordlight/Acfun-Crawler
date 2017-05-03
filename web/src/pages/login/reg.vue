@@ -87,7 +87,7 @@
         methods:{
             reg(){
                 var self=this;
-                this.$refs.regrule.validate((valid)=>{
+                this.$refs['regrule'].validate((valid)=>{
                     if(valid){
                         request('reg',this.regrule,self,function(data){
                             if(data.state===301){
@@ -107,8 +107,8 @@
                                     setTimeout(function(){
                                         window.location.href='http://localhost:4000/main.html';
                                     },1000);
-                                }
-                            }
+                                };
+                            };
                         })
                     }else{
                         return false;

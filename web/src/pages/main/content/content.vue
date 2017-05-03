@@ -20,7 +20,7 @@
                     <img src="../../../../assets/img/biaoqing.gif" alt="评论">
                 </div>
                 <div class="comment_time">
-                    <p>发表于 {{item.timestamp}}</p>
+                    <p>发表于 {{item.timestamp | time}}</p>
                 </div>
                 <div class="comment_info">
                     <p class="comment_name">{{item.name}}</p>
@@ -42,11 +42,9 @@
         created(){
             let self=this;
             let bid=this.$store.getters.bid;
-            console.log(bid);
             request('content',{bid:bid},self,function(data){
                 if(data.state===200){
                     data.data.content=data.data.content.split('\n');
-                    console.log(data.data);
                     self.blog=data.data;
                     request('comments',{bid:bid},function(data){
                         if(data.state===200){

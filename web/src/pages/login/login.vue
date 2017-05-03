@@ -58,9 +58,9 @@
         methods:{
             login(){
                 var self=this;
-                this.$refs.loginrule.validate((valid)=>{
+                this.$refs['loginrule'].validate((valid)=>{
                     if(valid){
-                        request('login',this.loginrule,self,function(data){
+                        request('login',self.loginrule,self,function(data){
                             switch (data.state) {
                                 case 10003:
                                 self.$message({
@@ -84,16 +84,18 @@
                                 });
                                 if(data.data.token){
                                     localStorage.setItem('token',data.data.token);
-                                }
+                                };
                                 setTimeout(function(){
                                     window.location.href='http://localhost:4000/main.html';
-                                },1000);
+                                },500);
                                 break;
                                 default:
                                 break;
                             }
                         })
-                    }
+                    }else{
+                        return;
+                    };
                 })
             },
             reg(){

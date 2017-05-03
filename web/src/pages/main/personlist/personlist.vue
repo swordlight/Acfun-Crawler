@@ -61,14 +61,17 @@
             }
         },
         created(){
-            let self=this;
-            request('personlist',{author:'赵大树'},self,function(data){
-                if(data.state===200){
-                    self.personlist=data.data;
-                }
-            })
+            this.initData();
         },
         methods:{   
+            initData(){
+                let self=this;
+                request('personlist',{},self,function(data){
+                    if(data.state===200){
+                        self.personlist=data.data;
+                    }
+                })
+            },
             lookarticle(index){
                 let self=this;
                 let bid=this.personlist[index].bid;
@@ -76,9 +79,23 @@
                 this.$router.push('/content');
             },
             ok(){
-                this.$message.success('提交成功');
-                this.$refs['ruleForm'].resetFields();
-                this.createBlog=false;
+                var self=this;
+                this.$refs['ruleForm'].validate(valid=>{
+                    if(valid){
+                        request('createBlog',self.ruleForm,self,function(data){
+                            if(data.state==200){
+                               self.$message.success('提交成功');
+                               self.$refs['ruleForm'].resetFields();
+                               self.createBlog=false;
+                               self.initData();
+                            }else{
+                               self.$message.success('提交失败');
+                            }
+                        })
+                    }else{
+                        return;
+                    }
+                })
             },  
             cancel(){
                 this.$refs['ruleForm'].resetFields();

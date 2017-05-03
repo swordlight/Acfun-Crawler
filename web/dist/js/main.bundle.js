@@ -426,9 +426,7 @@ exports.request = request;
 exports.timetransform = timetransform;
 function request(url, data, self, fn) {
     url = 'http://localhost:4000/' + url;
-    if (data.token) {
-        return;
-    } else {
+    if (!data.token) {
         data.token = localStorage.getItem('token');
     };
     data = JSON.stringify(data); //转为json
@@ -444,8 +442,9 @@ function request(url, data, self, fn) {
                 self.$message.error('token失效，请重新登录');
             } else if (responseText.state === 10052) {
                 self.$message.error('token错误，请登录后再操作');
+            } else {
+                fn(responseText);
             }
-            fn(responseText); //解析json
         }
     };
     obj.send(data);
@@ -806,6 +805,19 @@ exports.default = {
             select: '',
             search: ''
         };
+    },
+
+    methods: {
+        userEdit: function userEdit(edit) {
+            switch (edit) {
+                case 'logout':
+                    localStorage.removeItem('token');
+                    window.location.href = 'http://localhost:4000';
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 };
 
@@ -832,11 +844,9 @@ exports.default = {
     created: function created() {
         var self = this;
         var bid = this.$store.getters.bid;
-        console.log(bid);
         (0, _util.request)('content', { bid: bid }, self, function (data) {
             if (data.state === 200) {
                 data.data.content = data.data.content.split('\n');
-                console.log(data.data);
                 self.blog = data.data;
                 (0, _util.request)('comments', { bid: bid }, function (data) {
                     if (data.state === 200) {
@@ -914,15 +924,18 @@ exports.default = {
         };
     },
     created: function created() {
-        var self = this;
-        (0, _util.request)('personlist', { author: '赵大树' }, self, function (data) {
-            if (data.state === 200) {
-                self.personlist = data.data;
-            }
-        });
+        this.initData();
     },
 
     methods: {
+        initData: function initData() {
+            var self = this;
+            (0, _util.request)('personlist', {}, self, function (data) {
+                if (data.state === 200) {
+                    self.personlist = data.data;
+                }
+            });
+        },
         lookarticle: function lookarticle(index) {
             var self = this;
             var bid = this.personlist[index].bid;
@@ -930,9 +943,23 @@ exports.default = {
             this.$router.push('/content');
         },
         ok: function ok() {
-            this.$message.success('提交成功');
-            this.$refs['ruleForm'].resetFields();
-            this.createBlog = false;
+            var self = this;
+            this.$refs['ruleForm'].validate(function (valid) {
+                if (valid) {
+                    (0, _util.request)('createBlog', self.ruleForm, self, function (data) {
+                        if (data.state == 200) {
+                            self.$message.success('提交成功');
+                            self.$refs['ruleForm'].resetFields();
+                            self.createBlog = false;
+                            self.initData();
+                        } else {
+                            self.$message.success('提交失败');
+                        }
+                    });
+                } else {
+                    return;
+                }
+            });
         },
         cancel: function cancel() {
             this.$refs['ruleForm'].resetFields();
@@ -1159,6 +1186,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "trigger": "click",
       "menu-align": "start"
+    },
+    on: {
+      "command": _vm.userEdit
     }
   }, [_c('span', {
     staticClass: "el-dropdown-link"
@@ -1166,7 +1196,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "el-icon-caret-bottom el-icon--right"
   })]), _vm._v(" "), _c('el-dropdown-menu', {
     slot: "dropdown"
-  }, [_c('el-dropdown-item', [_vm._v("退出登录")])], 1)], 1), _vm._v(" "), _c('router-link', {
+  }, [_c('el-dropdown-item', {
+    attrs: {
+      "command": "logout"
+    }
+  }, [_vm._v("退出登录")])], 1)], 1), _vm._v(" "), _c('router-link', {
     attrs: {
       "to": "personlist"
     }
@@ -1213,7 +1247,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "comment"
     }, [_vm._m(0, true), _vm._v(" "), _c('div', {
       staticClass: "comment_time"
-    }, [_c('p', [_vm._v("发表于 " + _vm._s(item.timestamp))])]), _vm._v(" "), _c('div', {
+    }, [_c('p', [_vm._v("发表于 " + _vm._s(_vm._f("time")(item.timestamp)))])]), _vm._v(" "), _c('div', {
       staticClass: "comment_info"
     }, [_c('p', {
       staticClass: "comment_name"
@@ -1560,6 +1594,11 @@ var _store2 = _interopRequireDefault(_store);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 Vue.use(VueRouter);
+
+Vue.filter('time', function (value) {
+    return new Date(value).toLocaleString().replace(/\//g, "-");
+});
+
 var routes = [{ path: '/alllist', component: __webpack_require__(12) }, { path: '/personlist', component: __webpack_require__(15) }, { path: '/content', component: __webpack_require__(14) }, { path: '/', redirect: '/alllist' }];
 var router = new VueRouter({
     routes: routes

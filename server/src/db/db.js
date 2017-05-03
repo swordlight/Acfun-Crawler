@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const DB_URL='mongodb://localhost:27017/acfun-crawler';
+mongoose.Promise=global.Promise;
 
 mongoose.connect(DB_URL);  //连接mongodb数据库
 
@@ -27,6 +28,7 @@ let UserModel=mongoose.model('users',UserSchema,'users');  //创建schema模型m
 //blogs collection
 let BlogsSchema=new Schema({
     bid:{type:Number},
+    uid:{type:Number},
     title:{type:String},
     author:{type:String},
     timestamp:{type:Number},

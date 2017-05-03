@@ -7,7 +7,7 @@ export default{
     createbid(){
         return bid++;
     },
-    checkToken(db,jwt,req,res,callback){
+    checkToken(db,jwt,req,res,next,callback){
         jwt.verify(req.body.token,'woshidashabi',function(err,decoded){
             if(err){
                 if(err.name==='TokenExpiredError'){

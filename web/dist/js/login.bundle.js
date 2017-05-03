@@ -426,9 +426,7 @@ exports.request = request;
 exports.timetransform = timetransform;
 function request(url, data, self, fn) {
     url = 'http://localhost:4000/' + url;
-    if (data.token) {
-        return;
-    } else {
+    if (!data.token) {
         data.token = localStorage.getItem('token');
     };
     data = JSON.stringify(data); //转为json
@@ -444,8 +442,9 @@ function request(url, data, self, fn) {
                 self.$message.error('token失效，请重新登录');
             } else if (responseText.state === 10052) {
                 self.$message.error('token错误，请登录后再操作');
+            } else {
+                fn(responseText);
             }
-            fn(responseText); //解析json
         }
     };
     obj.send(data);
@@ -691,12 +690,10 @@ exports.default = {
 
     methods: {
         login: function login() {
-            var _this = this;
-
             var self = this;
-            this.$refs.loginrule.validate(function (valid) {
+            this.$refs['loginrule'].validate(function (valid) {
                 if (valid) {
-                    (0, _util.request)('login', _this.loginrule, self, function (data) {
+                    (0, _util.request)('login', self.loginrule, self, function (data) {
                         switch (data.state) {
                             case 10003:
                                 self.$message({
@@ -720,16 +717,18 @@ exports.default = {
                                 });
                                 if (data.data.token) {
                                     localStorage.setItem('token', data.data.token);
-                                }
+                                };
                                 setTimeout(function () {
                                     window.location.href = 'http://localhost:4000/main.html';
-                                }, 1000);
+                                }, 500);
                                 break;
                             default:
                                 break;
                         }
                     });
-                }
+                } else {
+                    return;
+                };
             });
         },
         reg: function reg() {
@@ -837,7 +836,7 @@ exports.default = {
             var _this2 = this;
 
             var self = this;
-            this.$refs.regrule.validate(function (valid) {
+            this.$refs['regrule'].validate(function (valid) {
                 if (valid) {
                     (0, _util.request)('reg', _this2.regrule, self, function (data) {
                         if (data.state === 301) {
@@ -857,8 +856,8 @@ exports.default = {
                                 setTimeout(function () {
                                     window.location.href = 'http://localhost:4000/main.html';
                                 }, 1000);
-                            }
-                        }
+                            };
+                        };
                     });
                 } else {
                     return false;

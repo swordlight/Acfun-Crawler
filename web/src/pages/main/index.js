@@ -2,6 +2,11 @@ import App from './app';
 import store from '../../vuex/store';
 
 Vue.use(VueRouter);
+
+Vue.filter('time', function (value) {
+    return new Date(value).toLocaleString().replace(/\//g, "-");
+})
+
 const routes=[
     {path:'/alllist',component:require('./alllist/alllist')},
     {path:'/personlist',component:require('./personlist/personlist')},

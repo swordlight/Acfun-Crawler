@@ -1,8 +1,6 @@
 export function request (url, data, self, fn) {
     url='http://localhost:4000/'+url;
-    if(data.token){
-        return;
-    }else{
+    if(!data.token){
         data.token=localStorage.getItem('token');
     };
     data=JSON.stringify(data);  //转为json
@@ -17,8 +15,9 @@ export function request (url, data, self, fn) {
                 self.$message.error('token失效，请重新登录')
             }else if(responseText.state===10052){
                 self.$message.error('token错误，请登录后再操作')
+            }else{
+                fn(responseText);
             }
-            fn(responseText);  //解析json
         }
     };
     obj.send(data);

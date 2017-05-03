@@ -10,12 +10,12 @@
                     </el-select>
                     <el-button slot="append" icon="search"></el-button>
                 </el-input>
-                <el-dropdown trigger="click" menu-align="start" class="dropdown">
+                <el-dropdown trigger="click" menu-align="start" class="dropdown" @command="userEdit">
                     <span class="el-dropdown-link">
                         <i class="el-icon-caret-bottom el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>退出登录</el-dropdown-item>
+                        <el-dropdown-item command="logout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <router-link to="personlist"><img class="poster" src="../../../assets/img/poster.gif" alt=""></router-link>
@@ -32,6 +32,18 @@
             return{
                 select:'',
                 search:''
+            }
+        },
+        methods:{
+            userEdit(edit){
+                switch(edit){
+                    case 'logout':
+                        localStorage.removeItem('token');
+                        window.location.href='http://localhost:4000';
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
