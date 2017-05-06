@@ -3,7 +3,7 @@
         <header>
             <img src="../../../../assets/img/blogtop.gif" alt="博客">
             <h1>{{blog.title}}</h1>
-            <span>{{blog.viewnumber}}围观·{{blog.comment}}评论· / 发布于 {{blog.timestamp}}</span>
+            <span>{{blog.viewnumber}}围观·{{blog.comment}}评论· / 发布于 {{blog.timestamp | formatTime}}</span>
         </header>
         <article>
             <p v-for="p in blog.content">&nbsp;&nbsp;{{p}}</p>
@@ -20,7 +20,7 @@
                     <img src="../../../../assets/img/biaoqing.gif" alt="评论">
                 </div>
                 <div class="comment_time">
-                    <p>发表于 {{item.timestamp | time}}</p>
+                    <p>发表于 {{item.timestamp | formatTime}}</p>
                 </div>
                 <div class="comment_info">
                     <p class="comment_name">{{item.name}}</p>
@@ -39,19 +39,18 @@
                 comments:[]
             }
         },
-        created(){
+        mounted(){
             let self=this;
             let bid=this.$store.getters.bid;
             request('content',{bid:bid},self,function(data){
                 if(data.state===200){
                     data.data.content=data.data.content.split('\n');
                     self.blog=data.data;
-                    request('comments',{bid:bid},function(data){
+                    request('comments',{bid:bid},self,function(data){
                         if(data.state===200){
                             self.comments=data.data;
                             self.comments.forEach(function(e,index){
-                                e.info=e.info.split('\n');
-                                e.timestamp=timetransform(e.timestamp);                                                                        
+                                e.info=e.info.split('\n');                                                                     
                             })
                         }
                     })

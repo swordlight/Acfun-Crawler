@@ -16,7 +16,9 @@ export default{
                     let user=new db.users({
                         username:username,
                         userpassword:userpassword,
-                        uid:util.createuid()
+                        uid:util.createuid(),
+                        nickname:'',
+                        signature:'这个人很懒，什么都没有写'
                     })
                     user.save(function(e,s){
                         if(e){
@@ -93,6 +95,18 @@ export default{
                     next(e);
                 }else{
                     res.status(200).json({state:200,msg:'查询成功',data:s});
+                }
+            })
+        });
+    },
+    getuserinfo(req,res,next){
+        util.checkToken(db,jwt,req,res,next,function(decoded){  //验证token
+            var uid=decoded.uid;
+            db.users.find({'uid':uid},function(e,s){
+                if(e){
+                    next(e);
+                }else{
+                    res.status(200).json({state:200,msg:'查询成功',data:s[0]});
                 }
             })
         });

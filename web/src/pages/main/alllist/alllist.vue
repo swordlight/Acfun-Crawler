@@ -4,7 +4,7 @@
             <a href="javascript:void(null)" class="title" @click="lookarticle(index)">{{item.title}}</a>
             <el-breadcrumb class="des">
                 <el-breadcrumb-item class="author">作者{{item.author}}</el-breadcrumb-item>
-                <el-breadcrumb-item class="timestamp">时间{{item.timestamp}}</el-breadcrumb-item>
+                <el-breadcrumb-item class="timestamp">时间{{item.timestamp | formatTime}}</el-breadcrumb-item>
                 <el-breadcrumb-item class="comment">{{item.comment}}个评论</el-breadcrumb-item>
                 <el-breadcrumb-item class="viewnumber">{{item.viewnumber}}次阅读</el-breadcrumb-item>
             </el-breadcrumb>
@@ -20,7 +20,7 @@
                 alllist:[]
             }
         },
-        created(){
+        mounted(){
             let self=this;
             request('alllist',{},self,function(data){
                 if(data.state===200){

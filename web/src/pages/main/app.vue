@@ -11,10 +11,11 @@
                     <el-button slot="append" icon="search"></el-button>
                 </el-input>
                 <el-dropdown trigger="click" menu-align="start" class="dropdown" @command="userEdit">
-                    <span class="el-dropdown-link">
-                        <i class="el-icon-caret-bottom el-icon--right"></i>
-                    </span>
+                    <el-button type="primary" size="small">
+                        {{userinfo.username}}<i class="el-icon-caret-bottom el-icon--right"></i>
+                    </el-button>
                     <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="userinfo">个人设置</el-dropdown-item>
                         <el-dropdown-item command="logout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -27,6 +28,10 @@
     </div>                    
 </template>
 <script>
+    var {
+        mapGetters,
+        mapActions
+    } = Vuex
     export default{
         data(){
             return{
@@ -34,17 +39,37 @@
                 search:''
             }
         },
+        mounted(){
+            if(!localStorage.getItem('token')){
+                this.$message.error('请登陆后再进入');
+                setTimeout(()=>{
+                    window.location.href='http://localhost:4000';
+                },1000)
+            };
+            this.getuserinfo();
+        },
+        computed:{
+            ...mapGetters({
+                userinfo:'userinfo'
+            })
+        },
         methods:{
+            ...mapActions({
+                getuserinfo:'getuserinfo'
+            }),
             userEdit(edit){
                 switch(edit){
                     case 'logout':
                         localStorage.removeItem('token');
                         window.location.href='http://localhost:4000';
                         break;
+                    case 'userinfo':
+                        this.$router.push('/userinfo');
+                        break;
                     default:
                         break;
                 }
-            }
+            },
         }
     }
 </script>

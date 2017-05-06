@@ -46,11 +46,9 @@ var option = {
                 test: /\.js$/,
                 use:[{
                     loader: 'babel-loader',
-                    // include: [path.resolve('./web/src')],
                     options: {
-                        presets: ['es2015', 'stage-0']
+                        presets: ['es2015','stage-2']
                     },
-                    // exclude: /node_modules/
                 }]
             },
             {

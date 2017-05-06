@@ -1,14 +1,14 @@
 <template>
     <div class="content">
         <div style="text-align:center;">
-            <h1 style="color:#1D8CE0;">个人中心</h1>
+            <h1 style="color:#1D8CE0;">个人博客</h1>
             <el-button type="primary" @click="createBlog=true;">我要写新博客</el-button>
         </div>
         <div v-for="(item,index) in personlist" class="item">
             <a href="javascript:void(null)" class="title" @click="lookarticle(index)">{{item.title}}</a>
             <el-breadcrumb class="des">
                 <el-breadcrumb-item class="author">作者{{item.author}}</el-breadcrumb-item>
-                <el-breadcrumb-item class="timestamp">时间{{item.timestamp}}</el-breadcrumb-item>
+                <el-breadcrumb-item class="timestamp">时间{{item.timestamp | formatTime}}</el-breadcrumb-item>
                 <el-breadcrumb-item class="comment">{{item.comment}}个评论</el-breadcrumb-item>
                 <el-breadcrumb-item class="viewnumber">{{item.viewnumber}}次阅读</el-breadcrumb-item>
             </el-breadcrumb>
@@ -60,7 +60,7 @@
                 }
             }
         },
-        created(){
+        mounted(){
             this.initData();
         },
         methods:{   

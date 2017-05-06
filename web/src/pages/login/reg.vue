@@ -104,6 +104,9 @@
                                         message: '注册成功',
                                         type: 'success'
                                     });
+                                    if(data.data.token){
+                                        localStorage.setItem('token',data.data.token);
+                                    };
                                     setTimeout(function(){
                                         window.location.href='http://localhost:4000/main.html';
                                     },1000);

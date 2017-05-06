@@ -29,6 +29,9 @@ export default (app,express,action)=>{
     router.all('/personlist',function(req,res,next){  //查看个人博客
         action.personlist(req,res,next);
     });
+    router.all('/getuserinfo',function(req,res,next){  //查询个人信息
+        action.getuserinfo(req,res,next);
+    });
     router.all('/createBlog',function(req,res,next){  //新建博客
         action.createBlog(req,res,next);
     });

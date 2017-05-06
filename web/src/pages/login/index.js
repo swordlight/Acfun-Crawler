@@ -1,5 +1,6 @@
 import App from './app';
-import '../../assets/css/login.css';
+import store from '../../vuex/store';
+import '../../assets/css/all.css';
 
 Vue.use(VueRouter); //调用vuerouter
 
@@ -15,6 +16,7 @@ const router=new VueRouter({  //创建router实例
 
 const app = new Vue({
     router,
+    store,
     el: '#app',
     template: '<app></app>',
     components: {
