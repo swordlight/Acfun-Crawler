@@ -124,6 +124,48 @@ module.exports = function () {
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.request = request;
+exports.timetransform = timetransform;
+function request(url, data, self, fn) {
+    url = 'http://localhost:4000/' + url;
+    if (!data.token) {
+        data.token = localStorage.getItem('token');
+    };
+    data = JSON.stringify(data); //转为json
+    var obj = new XMLHttpRequest();
+    obj.open("POST", url, true);
+    obj.setRequestHeader("Content-type", "application/json;charset=utf-8"); // 发送信息至服务器时内容编码类型
+    obj.onreadystatechange = function () {
+        if (obj.readyState == 4 && (obj.status == 200 || obj.status == 304)) {
+            // 304未修改                
+            var responseText = JSON.parse(obj.responseText);
+            console.log(responseText);
+            if (responseText.state === 10051) {
+                self.$message.error('token失效，请重新登录');
+            } else if (responseText.state === 10052) {
+                self.$message.error('token错误，请登录后再操作');
+            } else {
+                fn(responseText);
+            }
+        }
+    };
+    obj.send(data);
+};
+
+function timetransform(timestamp) {
+    return new Date(timestamp).toLocaleString().replace(/\//g, "-");
+}
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports) {
 
 module.exports = function normalizeComponent (
@@ -177,7 +219,7 @@ module.exports = function normalizeComponent (
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -413,48 +455,6 @@ function applyToTag (styleElement, obj) {
 
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.request = request;
-exports.timetransform = timetransform;
-function request(url, data, self, fn) {
-    url = 'http://localhost:4000/' + url;
-    if (!data.token) {
-        data.token = localStorage.getItem('token');
-    };
-    data = JSON.stringify(data); //转为json
-    var obj = new XMLHttpRequest();
-    obj.open("POST", url, true);
-    obj.setRequestHeader("Content-type", "application/json;charset=utf-8"); // 发送信息至服务器时内容编码类型
-    obj.onreadystatechange = function () {
-        if (obj.readyState == 4 && (obj.status == 200 || obj.status == 304)) {
-            // 304未修改                
-            var responseText = JSON.parse(obj.responseText);
-            console.log(responseText);
-            if (responseText.state === 10051) {
-                self.$message.error('token失效，请重新登录');
-            } else if (responseText.state === 10052) {
-                self.$message.error('token错误，请登录后再操作');
-            } else {
-                fn(responseText);
-            }
-        }
-    };
-    obj.send(data);
-};
-
-function timetransform(timestamp) {
-    return new Date(timestamp).toLocaleString().replace(/\//g, "-");
-}
-
-/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -475,7 +475,7 @@ var _main = __webpack_require__(7);
 
 var _main2 = _interopRequireDefault(_main);
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -488,13 +488,16 @@ exports.default = new Vuex.Store({
     state: { //状态数据
         bid: '',
         userinfo: {
-            username: '未登录'
+            username: '未登录',
+            nickname: '未登录',
+            signature: '未登录'
         }
     },
     mutations: (_mutations = {}, _defineProperty(_mutations, _mutationsTypes2.default.SET_BID, function (state, bid) {
         //使用常量作为属性名
         state.bid = bid;
     }), _defineProperty(_mutations, _mutationsTypes2.default.GET_USERINFO, function (state, userinfo) {
+
         state.userinfo = userinfo;
     }), _mutations),
     actions: {
@@ -508,7 +511,6 @@ exports.default = new Vuex.Store({
         getuserinfo: function getuserinfo(_ref2) {
             var commit = _ref2.commit;
 
-            console.log(1);
             (0, _util.request)('getuserinfo', {}, new Vue(), function (data) {
                 if (data.state === 200 && data.data) {
                     commit(_mutationsTypes2.default.GET_USERINFO, data.data);
@@ -626,7 +628,7 @@ module.exports = __webpack_require__.p + "img/poster.fbad00.gif";
 /* styles */
 __webpack_require__(51)
 
-var Component = __webpack_require__(1)(
+var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(22),
   /* template */
@@ -664,7 +666,7 @@ module.exports = Component.exports
 /* styles */
 __webpack_require__(48)
 
-var Component = __webpack_require__(1)(
+var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(23),
   /* template */
@@ -702,7 +704,7 @@ module.exports = Component.exports
 /* styles */
 __webpack_require__(50)
 
-var Component = __webpack_require__(1)(
+var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(24),
   /* template */
@@ -740,7 +742,7 @@ module.exports = Component.exports
 /* styles */
 __webpack_require__(52)
 
-var Component = __webpack_require__(1)(
+var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(25),
   /* template */
@@ -778,7 +780,7 @@ module.exports = Component.exports
 /* styles */
 __webpack_require__(54)
 
-var Component = __webpack_require__(1)(
+var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(26),
   /* template */
@@ -822,7 +824,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(1);
 
 exports.default = {
     data: function data() {
@@ -958,7 +960,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(1);
 
 exports.default = {
     data: function data() {
@@ -1029,7 +1031,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(1);
 
 exports.default = {
     data: function data() {
@@ -1139,49 +1141,186 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
+var _util = __webpack_require__(1);
 
 exports.default = {
     data: function data() {
         return {
-            imageUrl: '',
-            nickname: '',
-            username: '',
-            signature: ''
+            userinfo: {
+                username: '未登录',
+                nickname: '未登录',
+                signature: '未登录',
+                poster: ''
+            },
+            upinfo: {},
+            ifuser: true,
+            ifnick: true,
+            ifsign: true,
+            isposter: true
         };
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        (0, _util.request)('getuserinfo', {}, this, function (data) {
+            if (data.state === 200 && data.data) {
+                _this.userinfo = data.data;
+                var ob = {};
+                Object.keys(_this.userinfo).forEach(function (key) {
+                    ob[key] = _this.userinfo[key];
+                });
+                _this.upinfo = ob;
+            };
+        });
     },
 
     methods: {
-        upload: function upload() {}
+        upload: function upload() {
+            var self = this;
+            var up = document.createElement('input'); //模拟一个文件框
+            up.type = "file";
+            up.click();
+            up.addEventListener('change', function () {
+                if (typeof FileReader == 'undefined') {
+                    alert('垃圾浏览器，不支持新特性，赶紧滚去升级吧');
+                } else {
+                    self.isposter = false;
+                    var read = new FileReader();
+                    read.readAsDataURL(up.files[0]);
+                    read.onload = function (e) {
+                        (0, _util.request)('edituserinfo', { poster: e.target.result }, self, function (data) {
+                            if (data.state === 200) {
+                                self.$message.success('图片上传成功');
+                                self.upinfo.poster = e.target.result;
+                                self.isposter = true;
+                                self.$store.dispatch('getuserinfo');
+                            }
+                        });
+                    };
+                };
+            }, false);
+        },
+        edituser: function edituser() {
+            this.ifnick = true;
+            this.ifsign = true;
+            if (this.ifuser) {
+                this.ifuser = false;
+            } else {
+                this.ifuser = true;
+            }
+        },
+        editnick: function editnick() {
+            this.ifuser = true;
+            this.ifsign = true;
+            if (this.ifnick) {
+                this.ifnick = false;
+            } else {
+                this.ifnick = true;
+            }
+        },
+        editsign: function editsign() {
+            this.ifuser = true;
+            this.ifnick = true;
+            if (this.ifsign) {
+                this.ifsign = false;
+            } else {
+                this.ifsign = true;
+            }
+        },
+        upuser: function upuser() {
+            var _this2 = this;
+
+            if (this.upinfo.username && this.upinfo.username !== this.userinfo.username) {
+                (0, _util.request)('edituserinfo', { username: this.upinfo.username }, this, function (data) {
+                    if (data.state === 200) {
+                        _this2.$message.success('修改用户名成功');
+                        _this2.userinfo.username = _this2.upinfo.username;
+                        _this2.ifuser = true;
+                        _this2.$store.dispatch('getuserinfo');
+                    } else if (data.state === 10001) {
+                        _this2.$message.error('用户名已被占用');
+                        _this2.ifuser = true;
+                    } else {
+                        _this2.$message.error('修改用户名失败');
+                        _this2.ifuser = true;
+                    };
+                });
+            } else {
+                this.ifuser = true;
+            };
+        },
+        upnick: function upnick() {
+            var _this3 = this;
+
+            if (this.upinfo.nickname && this.upinfo.nickname !== this.userinfo.nickname) {
+                (0, _util.request)('edituserinfo', { nickname: this.upinfo.nickname }, this, function (data) {
+                    if (data.state === 200) {
+                        _this3.$message.success('修改昵称成功');
+                        _this3.userinfo.nickname = _this3.upinfo.nickname;
+                        _this3.ifnick = true;
+                    } else {
+                        _this3.$message.error('修改昵称失败');
+                        _this3.ifnick = true;
+                    };
+                });
+            } else {
+                this.ifnick = true;
+            }
+        },
+        upsign: function upsign() {
+            var _this4 = this;
+
+            if (this.upinfo.signature && this.upinfo.signature !== this.userinfo.signature) {
+                (0, _util.request)('edituserinfo', { signature: this.upinfo.signature }, this, function (data) {
+                    if (data.state === 200) {
+                        _this4.$message.success('修改签名成功');
+                        _this4.userinfo.signature = _this4.upinfo.signature;
+                        _this4.ifsign = true;
+                    } else {
+                        _this4.$message.error('修改签名失败');
+                        _this4.ifsign = true;
+                    };
+                });
+            } else {
+                this.ifsign = true;
+            }
+        }
     }
-};
+}; //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /***/ }),
 /* 27 */,
@@ -1251,7 +1390,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "\nh1[data-v-c158640e] {\n  width: 100px;\n  margin: 50px auto;\n  color: #1D8CE0;\n}\n.content[data-v-c158640e] {\n  margin-top: 100px;\n}\n.content .form[data-v-c158640e] {\n  width: 600px;\n  float: left;\n}\n.content .form .box-card[data-v-c158640e] {\n  width: 480px;\n  height: 300px;\n  font-size: 16px;\n}\n.content .form .box-card div[data-v-c158640e] {\n  margin-top: 20px;\n}\n.content .form .box-card div .edit[data-v-c158640e] {\n  float: right;\n  font-size: 12px;\n  color: #1D8CE0;\n  cursor: pointer;\n}\n.content .avatar-uploader[data-v-c158640e] {\n  border: 1px dashed #d9d9d9;\n  width: 178px;\n  border-radius: 6px;\n  cursor: pointer;\n  position: relative;\n  overflow: hidden;\n}\n.content .avatar-uploader[data-v-c158640e]:hover {\n  border-color: #20a0ff;\n}\n.content .avatar-uploader-icon[data-v-c158640e] {\n  font-size: 28px;\n  color: #8c939d;\n  width: 178px;\n  height: 178px;\n  line-height: 178px;\n  text-align: center;\n}\n.content .avatar[data-v-c158640e] {\n  width: 178px;\n  height: 178px;\n  display: block;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/main/userinfo/userinfo.vue"],"names":[],"mappings":";AAAA;EACE,aAAa;EACb,kBAAkB;EAClB,eAAe;CAChB;AACD;EACE,kBAAkB;CACnB;AACD;EACE,aAAa;EACb,YAAY;CACb;AACD;EACE,aAAa;EACb,cAAc;EACd,gBAAgB;CACjB;AACD;EACE,iBAAiB;CAClB;AACD;EACE,aAAa;EACb,gBAAgB;EAChB,eAAe;EACf,gBAAgB;CACjB;AACD;EACE,2BAA2B;EAC3B,aAAa;EACb,mBAAmB;EACnB,gBAAgB;EAChB,mBAAmB;EACnB,iBAAiB;CAClB;AACD;EACE,sBAAsB;CACvB;AACD;EACE,gBAAgB;EAChB,eAAe;EACf,aAAa;EACb,cAAc;EACd,mBAAmB;EACnB,mBAAmB;CACpB;AACD;EACE,aAAa;EACb,cAAc;EACd,eAAe;CAChB","file":"userinfo.vue","sourcesContent":["h1 {\n  width: 100px;\n  margin: 50px auto;\n  color: #1D8CE0;\n}\n.content {\n  margin-top: 100px;\n}\n.content .form {\n  width: 600px;\n  float: left;\n}\n.content .form .box-card {\n  width: 480px;\n  height: 300px;\n  font-size: 16px;\n}\n.content .form .box-card div {\n  margin-top: 20px;\n}\n.content .form .box-card div .edit {\n  float: right;\n  font-size: 12px;\n  color: #1D8CE0;\n  cursor: pointer;\n}\n.content .avatar-uploader {\n  border: 1px dashed #d9d9d9;\n  width: 178px;\n  border-radius: 6px;\n  cursor: pointer;\n  position: relative;\n  overflow: hidden;\n}\n.content .avatar-uploader:hover {\n  border-color: #20a0ff;\n}\n.content .avatar-uploader-icon {\n  font-size: 28px;\n  color: #8c939d;\n  width: 178px;\n  height: 178px;\n  line-height: 178px;\n  text-align: center;\n}\n.content .avatar {\n  width: 178px;\n  height: 178px;\n  display: block;\n}\n"],"sourceRoot":""}]);
+exports.push([module.i, "\nh1[data-v-c158640e] {\n  width: 100px;\n  margin: 50px auto;\n  color: #1D8CE0;\n}\n.content[data-v-c158640e] {\n  margin-top: 100px;\n}\n.content .form[data-v-c158640e] {\n  width: 600px;\n  float: left;\n}\n.content .form .box-card[data-v-c158640e] {\n  width: 480px;\n  height: 300px;\n  font-size: 16px;\n}\n.content .form .box-card div[data-v-c158640e] {\n  margin-top: 20px;\n  position: relative;\n  height: 50px;\n}\n.content .form .box-card div .label[data-v-c158640e] {\n  position: absolute;\n  left: 0;\n  line-height: 50px;\n}\n.content .form .box-card div .value[data-v-c158640e] {\n  position: absolute;\n  left: 60px;\n  line-height: 50px;\n}\n.content .form .box-card div .input[data-v-c158640e] {\n  position: absolute;\n  margin: auto;\n  left: 60px;\n  height: 50px;\n}\n.content .form .box-card div .edit[data-v-c158640e] {\n  position: absolute;\n  right: 0;\n  line-height: 50px;\n  font-size: 12px;\n  color: #1D8CE0;\n  cursor: pointer;\n  font-size: 18px;\n}\n.content .avatar-uploader[data-v-c158640e] {\n  border: 1px dashed #d9d9d9;\n  width: 178px;\n  border-radius: 6px;\n  cursor: pointer;\n  position: relative;\n  overflow: hidden;\n}\n.content .avatar-uploader[data-v-c158640e]:hover {\n  border-color: #20a0ff;\n}\n.content .avatar-uploader-icon[data-v-c158640e] {\n  font-size: 28px;\n  color: #8c939d;\n  width: 178px;\n  height: 178px;\n  line-height: 178px;\n  text-align: center;\n}\n.content .avatar[data-v-c158640e] {\n  width: 178px;\n  height: 178px;\n  display: block;\n}\n", "", {"version":3,"sources":["F:/html/blog/web/src/pages/main/userinfo/userinfo.vue"],"names":[],"mappings":";AAAA;EACE,aAAa;EACb,kBAAkB;EAClB,eAAe;CAChB;AACD;EACE,kBAAkB;CACnB;AACD;EACE,aAAa;EACb,YAAY;CACb;AACD;EACE,aAAa;EACb,cAAc;EACd,gBAAgB;CACjB;AACD;EACE,iBAAiB;EACjB,mBAAmB;EACnB,aAAa;CACd;AACD;EACE,mBAAmB;EACnB,QAAQ;EACR,kBAAkB;CACnB;AACD;EACE,mBAAmB;EACnB,WAAW;EACX,kBAAkB;CACnB;AACD;EACE,mBAAmB;EACnB,aAAa;EACb,WAAW;EACX,aAAa;CACd;AACD;EACE,mBAAmB;EACnB,SAAS;EACT,kBAAkB;EAClB,gBAAgB;EAChB,eAAe;EACf,gBAAgB;EAChB,gBAAgB;CACjB;AACD;EACE,2BAA2B;EAC3B,aAAa;EACb,mBAAmB;EACnB,gBAAgB;EAChB,mBAAmB;EACnB,iBAAiB;CAClB;AACD;EACE,sBAAsB;CACvB;AACD;EACE,gBAAgB;EAChB,eAAe;EACf,aAAa;EACb,cAAc;EACd,mBAAmB;EACnB,mBAAmB;CACpB;AACD;EACE,aAAa;EACb,cAAc;EACd,eAAe;CAChB","file":"userinfo.vue","sourcesContent":["h1 {\n  width: 100px;\n  margin: 50px auto;\n  color: #1D8CE0;\n}\n.content {\n  margin-top: 100px;\n}\n.content .form {\n  width: 600px;\n  float: left;\n}\n.content .form .box-card {\n  width: 480px;\n  height: 300px;\n  font-size: 16px;\n}\n.content .form .box-card div {\n  margin-top: 20px;\n  position: relative;\n  height: 50px;\n}\n.content .form .box-card div .label {\n  position: absolute;\n  left: 0;\n  line-height: 50px;\n}\n.content .form .box-card div .value {\n  position: absolute;\n  left: 60px;\n  line-height: 50px;\n}\n.content .form .box-card div .input {\n  position: absolute;\n  margin: auto;\n  left: 60px;\n  height: 50px;\n}\n.content .form .box-card div .edit {\n  position: absolute;\n  right: 0;\n  line-height: 50px;\n  font-size: 12px;\n  color: #1D8CE0;\n  cursor: pointer;\n  font-size: 18px;\n}\n.content .avatar-uploader {\n  border: 1px dashed #d9d9d9;\n  width: 178px;\n  border-radius: 6px;\n  cursor: pointer;\n  position: relative;\n  overflow: hidden;\n}\n.content .avatar-uploader:hover {\n  border-color: #20a0ff;\n}\n.content .avatar-uploader-icon {\n  font-size: 28px;\n  color: #8c939d;\n  width: 178px;\n  height: 178px;\n  line-height: 178px;\n  text-align: center;\n}\n.content .avatar {\n  width: 178px;\n  height: 178px;\n  display: block;\n}\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -1371,7 +1510,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('img', {
     staticClass: "poster",
     attrs: {
-      "src": __webpack_require__(10),
+      "src": _vm.userinfo.poster,
       "alt": ""
     }
   })])], 1)]), _vm._v(" "), _c('div', {
@@ -1648,21 +1787,123 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "form"
   }, [_c('el-card', {
     staticClass: "box-card"
-  }, [_c('div', [_c('span', [_vm._v("用户名：" + _vm._s(_vm.username))]), _vm._v(" "), _c('span', {
-    staticClass: "el-icon-edit edit"
-  })]), _vm._v(" "), _c('div', [_c('span', [_vm._v("昵称：" + _vm._s(_vm.nickname))]), _vm._v(" "), _c('span', {
-    staticClass: "el-icon-edit edit"
-  })]), _vm._v(" "), _c('div', [_c('span', [_vm._v("签名：" + _vm._s(_vm.signature))]), _vm._v(" "), _c('span', {
-    staticClass: "el-icon-edit edit"
-  })])])], 1), _vm._v(" "), _c('div', {
+  }, [_c('div', [_c('span', {
+    staticClass: "label"
+  }, [_vm._v("用户名：")]), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.ifuser),
+      expression: "ifuser"
+    }],
+    staticClass: "value"
+  }, [_vm._v(_vm._s(_vm.userinfo.username))]), _vm._v(" "), _c('el-input', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (!_vm.ifuser),
+      expression: "!ifuser"
+    }],
+    staticClass: "input",
+    staticStyle: {
+      "width": "100px"
+    },
+    on: {
+      "blur": _vm.upuser
+    },
+    model: {
+      value: (_vm.upinfo.username),
+      callback: function($$v) {
+        _vm.upinfo.username = $$v
+      },
+      expression: "upinfo.username"
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "el-icon-edit edit",
+    on: {
+      "click": _vm.edituser
+    }
+  })], 1), _vm._v(" "), _c('div', [_c('span', {
+    staticClass: "label"
+  }, [_vm._v("昵称：")]), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.ifnick),
+      expression: "ifnick"
+    }],
+    staticClass: "value"
+  }, [_vm._v(_vm._s(_vm.userinfo.nickname))]), _vm._v(" "), _c('el-input', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (!_vm.ifnick),
+      expression: "!ifnick"
+    }],
+    staticClass: "input",
+    staticStyle: {
+      "width": "100px"
+    },
+    on: {
+      "blur": _vm.upnick
+    },
+    model: {
+      value: (_vm.upinfo.nickname),
+      callback: function($$v) {
+        _vm.upinfo.nickname = $$v
+      },
+      expression: "upinfo.nickname"
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "el-icon-edit edit",
+    on: {
+      "click": _vm.editnick
+    }
+  })], 1), _vm._v(" "), _c('div', [_c('span', {
+    staticClass: "label"
+  }, [_vm._v("签名：")]), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.ifsign),
+      expression: "ifsign"
+    }],
+    staticClass: "value"
+  }, [_vm._v(_vm._s(_vm.userinfo.signature))]), _vm._v(" "), _c('el-input', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (!_vm.ifsign),
+      expression: "!ifsign"
+    }],
+    staticClass: "input",
+    staticStyle: {
+      "width": "200px"
+    },
+    on: {
+      "blur": _vm.upsign
+    },
+    model: {
+      value: (_vm.upinfo.signature),
+      callback: function($$v) {
+        _vm.upinfo.signature = $$v
+      },
+      expression: "upinfo.signature"
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "el-icon-edit edit",
+    on: {
+      "click": _vm.editsign
+    }
+  })], 1)])], 1), _vm._v(" "), _c('div', {
     staticClass: "avatar-uploader",
     on: {
       "click": _vm.upload
     }
-  }, [(_vm.imageUrl) ? _c('img', {
+  }, [(_vm.isposter) ? _c('img', {
     staticClass: "avatar",
     attrs: {
-      "src": _vm.imageUrl
+      "src": _vm.upinfo.poster
     }
   }) : _c('i', {
     staticClass: "el-icon-plus avatar-uploader-icon"
@@ -1688,7 +1929,7 @@ var content = __webpack_require__(28);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(2)("629e2dce", content, false);
+var update = __webpack_require__(3)("629e2dce", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -1715,7 +1956,7 @@ var content = __webpack_require__(30);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(2)("9060106e", content, false);
+var update = __webpack_require__(3)("9060106e", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -1741,7 +1982,7 @@ var content = __webpack_require__(31);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(2)("4f14c70e", content, false);
+var update = __webpack_require__(3)("4f14c70e", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -1767,7 +2008,7 @@ var content = __webpack_require__(32);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(2)("0fcabb0e", content, false);
+var update = __webpack_require__(3)("0fcabb0e", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -1794,7 +2035,7 @@ var content = __webpack_require__(34);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(2)("20f1454a", content, false);
+var update = __webpack_require__(3)("20f1454a", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags

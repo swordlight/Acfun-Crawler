@@ -23,7 +23,8 @@ let UserSchema=new Schema({  //创建schema实例(数据模式，表结构)
     userpassword:{type:String},
     uid:{type:Number},
     nickname:{type:String},
-    signature:{type:String}
+    signature:{type:String},
+    poster:{type:String}
 })
 let UserModel=mongoose.model('users',UserSchema,'users');  //创建schema模型model，对应collection,可操作数据库 
 

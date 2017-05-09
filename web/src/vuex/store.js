@@ -8,7 +8,9 @@ export default new Vuex.Store({
     state:{  //状态数据
         bid:'',
         userinfo:{
-            username:'未登录'
+            username:'未登录',
+            nickname:'未登录',
+            signature:'未登录'
         }
     },
     mutations:{  //接收commit改变state，只能同步
@@ -16,6 +18,7 @@ export default new Vuex.Store({
             state.bid=bid;
         },
         [mutation.GET_USERINFO](state,userinfo){
+            
             state.userinfo=userinfo;
         }
     },
@@ -25,7 +28,6 @@ export default new Vuex.Store({
             commit(mutation.SET_BID,bid);
         },
         getuserinfo({commit}){
-            console.log(1);
             request('getuserinfo',{},new Vue(),data=>{
                 if(data.state===200 && data.data){
                     commit(mutation.GET_USERINFO,data.data)

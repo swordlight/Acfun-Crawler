@@ -32,6 +32,9 @@ export default (app,express,action)=>{
     router.all('/getuserinfo',function(req,res,next){  //查询个人信息
         action.getuserinfo(req,res,next);
     });
+    router.all('/edituserinfo',function(req,res,next){  //修改个人信息
+        action.edituserinfo(req,res,next);
+    });
     router.all('/createBlog',function(req,res,next){  //新建博客
         action.createBlog(req,res,next);
     });

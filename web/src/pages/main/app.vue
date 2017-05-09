@@ -19,7 +19,7 @@
                         <el-dropdown-item command="logout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <router-link to="personlist"><img class="poster" src="../../../assets/img/poster.gif" alt=""></router-link>
+                <router-link to="personlist"><img class="poster" :src="userinfo.poster" alt=""></router-link>
             </div>
         </div>
         <div class="article">

@@ -124,6 +124,48 @@ module.exports = function () {
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.request = request;
+exports.timetransform = timetransform;
+function request(url, data, self, fn) {
+    url = 'http://localhost:4000/' + url;
+    if (!data.token) {
+        data.token = localStorage.getItem('token');
+    };
+    data = JSON.stringify(data); //转为json
+    var obj = new XMLHttpRequest();
+    obj.open("POST", url, true);
+    obj.setRequestHeader("Content-type", "application/json;charset=utf-8"); // 发送信息至服务器时内容编码类型
+    obj.onreadystatechange = function () {
+        if (obj.readyState == 4 && (obj.status == 200 || obj.status == 304)) {
+            // 304未修改                
+            var responseText = JSON.parse(obj.responseText);
+            console.log(responseText);
+            if (responseText.state === 10051) {
+                self.$message.error('token失效，请重新登录');
+            } else if (responseText.state === 10052) {
+                self.$message.error('token错误，请登录后再操作');
+            } else {
+                fn(responseText);
+            }
+        }
+    };
+    obj.send(data);
+};
+
+function timetransform(timestamp) {
+    return new Date(timestamp).toLocaleString().replace(/\//g, "-");
+}
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports) {
 
 module.exports = function normalizeComponent (
@@ -177,7 +219,7 @@ module.exports = function normalizeComponent (
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -413,48 +455,6 @@ function applyToTag (styleElement, obj) {
 
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.request = request;
-exports.timetransform = timetransform;
-function request(url, data, self, fn) {
-    url = 'http://localhost:4000/' + url;
-    if (!data.token) {
-        data.token = localStorage.getItem('token');
-    };
-    data = JSON.stringify(data); //转为json
-    var obj = new XMLHttpRequest();
-    obj.open("POST", url, true);
-    obj.setRequestHeader("Content-type", "application/json;charset=utf-8"); // 发送信息至服务器时内容编码类型
-    obj.onreadystatechange = function () {
-        if (obj.readyState == 4 && (obj.status == 200 || obj.status == 304)) {
-            // 304未修改                
-            var responseText = JSON.parse(obj.responseText);
-            console.log(responseText);
-            if (responseText.state === 10051) {
-                self.$message.error('token失效，请重新登录');
-            } else if (responseText.state === 10052) {
-                self.$message.error('token错误，请登录后再操作');
-            } else {
-                fn(responseText);
-            }
-        }
-    };
-    obj.send(data);
-};
-
-function timetransform(timestamp) {
-    return new Date(timestamp).toLocaleString().replace(/\//g, "-");
-}
-
-/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -475,7 +475,7 @@ var _main = __webpack_require__(7);
 
 var _main2 = _interopRequireDefault(_main);
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -488,13 +488,16 @@ exports.default = new Vuex.Store({
     state: { //状态数据
         bid: '',
         userinfo: {
-            username: '未登录'
+            username: '未登录',
+            nickname: '未登录',
+            signature: '未登录'
         }
     },
     mutations: (_mutations = {}, _defineProperty(_mutations, _mutationsTypes2.default.SET_BID, function (state, bid) {
         //使用常量作为属性名
         state.bid = bid;
     }), _defineProperty(_mutations, _mutationsTypes2.default.GET_USERINFO, function (state, userinfo) {
+
         state.userinfo = userinfo;
     }), _mutations),
     actions: {
@@ -508,7 +511,6 @@ exports.default = new Vuex.Store({
         getuserinfo: function getuserinfo(_ref2) {
             var commit = _ref2.commit;
 
-            console.log(1);
             (0, _util.request)('getuserinfo', {}, new Vue(), function (data) {
                 if (data.state === 200 && data.data) {
                     commit(_mutationsTypes2.default.GET_USERINFO, data.data);
@@ -623,7 +625,7 @@ module.exports = __webpack_require__.p + "img/logo_icon.2f0782.png";
 /* styles */
 __webpack_require__(49)
 
-var Component = __webpack_require__(1)(
+var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(19),
   /* template */
@@ -661,7 +663,7 @@ module.exports = Component.exports
 /* styles */
 __webpack_require__(47)
 
-var Component = __webpack_require__(1)(
+var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(20),
   /* template */
@@ -699,7 +701,7 @@ module.exports = Component.exports
 /* styles */
 __webpack_require__(53)
 
-var Component = __webpack_require__(1)(
+var Component = __webpack_require__(2)(
   /* script */
   __webpack_require__(21),
   /* template */
@@ -771,7 +773,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(1);
 
 exports.default = {
     data: function data() {
@@ -884,7 +886,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(1);
 
 exports.default = {
     data: function data() {
@@ -952,7 +954,7 @@ exports.default = {
             this.$refs['regrule'].validate(function (valid) {
                 if (valid) {
                     (0, _util.request)('reg', _this2.regrule, self, function (data) {
-                        if (data.state === 301) {
+                        if (data.state === 10001) {
                             self.$message({
                                 showClose: true,
                                 message: '账号已存在',
@@ -1289,7 +1291,7 @@ var content = __webpack_require__(27);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(2)("fa79092c", content, false);
+var update = __webpack_require__(3)("fa79092c", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -1316,7 +1318,7 @@ var content = __webpack_require__(29);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(2)("77a5eec6", content, false);
+var update = __webpack_require__(3)("77a5eec6", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -1345,7 +1347,7 @@ var content = __webpack_require__(33);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(2)("cb9c5070", content, false);
+var update = __webpack_require__(3)("cb9c5070", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags

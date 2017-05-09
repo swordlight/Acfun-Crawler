@@ -18,7 +18,8 @@ export default{
                         userpassword:userpassword,
                         uid:util.createuid(),
                         nickname:'',
-                        signature:'这个人很懒，什么都没有写'
+                        signature:'这个人很懒，什么都没有写',
+                        poster:'http://localhost:4000/image/noposter.png'
                     })
                     user.save(function(e,s){
                         if(e){
@@ -109,6 +110,60 @@ export default{
                     res.status(200).json({state:200,msg:'查询成功',data:s[0]});
                 }
             })
+        });
+    },
+    edituserinfo(req,res,next){
+        util.checkToken(db,jwt,req,res,next,function(decoded){  //验证token
+            var uid=decoded.uid;
+            switch(Object.keys(req.body)[0]){
+                case 'username':
+                    db.users.find({'uid':{$ne:uid},'username':req.body.username},(e,s)=>{
+                        if(e){
+                            next(e);
+                        }else{
+                            if(s.length<=0){
+                                db.users.update({'uid':uid},{$set:{'username':req.body.username}},(e,s)=>{
+                                    if(e){
+                                        next(e);
+                                    }else{
+                                        res.status(200).json({state:200,msg:'修改成功',data:{}});
+                                    }
+                                })
+                            }else{
+                                res.status(200).json({state:10001,msg:'用户名已存在',data:{}});
+                            }
+                        }
+                    });
+                    break;
+                case 'nickname':
+                    db.users.update({'uid':uid},{$set:{'nickname':req.body.nickname}},(e,s)=>{
+                        if(e){
+                            next(e);
+                        }else{
+                            res.status(200).json({state:200,msg:'修改成功',data:{}});
+                        }
+                    });
+                    break;
+                case 'signature':
+                    db.users.update({'uid':uid},{$set:{'signature':req.body.signature}},(e,s)=>{
+                        if(e){
+                            next(e);
+                        }else{
+                            res.status(200).json({state:200,msg:'修改成功',data:{}});
+                        }
+                    })
+                    break;
+                case 'poster':
+                    db.users.update({'uid':uid},{$set:{'poster':req.body.poster}},(e,s)=>{
+                        if(e){
+                            next(e);
+                        }else{
+                            res.status(200).json({state:200,msg:'上传成功',data:{}});
+                        }
+                    })
+                default:
+                    break;
+            }
         });
     },
     createBlog(req,res,next){

@@ -90,7 +90,7 @@
                 this.$refs['regrule'].validate((valid)=>{
                     if(valid){
                         request('reg',this.regrule,self,function(data){
-                            if(data.state===301){
+                            if(data.state===10001){
                                 self.$message({
                                     showClose: true,
                                     message: '账号已存在',
