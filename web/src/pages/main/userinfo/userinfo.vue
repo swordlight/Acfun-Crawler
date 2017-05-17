@@ -70,21 +70,33 @@
                 up.click();
                 up.addEventListener('change',()=>{
                     if(typeof FileReader == 'undefined'){  
-                        alert('垃圾浏览器，不支持新特性，赶紧滚去升级吧');
+                        alert('垃圾浏览器，赶紧滚去升级吧');
                     }else{
-                        self.isposter=false;
-                        var read=new FileReader();
-                        read.readAsDataURL(up.files[0])
-                        read.onload=(e)=>{
-                            request('edituserinfo',{poster:e.target.result},self,(data)=>{
-                                if(data.state===200){
-                                    self.$message.success('图片上传成功');
-                                    self.upinfo.poster=e.target.result;
-                                    self.isposter=true;
-                                    self.$store.dispatch('getuserinfo');
-                                }
-                            })
+                        if(up.files[0].size>=2*1024*1024){
+                            alert('只接受小于2MB的图片');
+                        }else{
+                            self.isposter=false;
+                            var read=new FileReader();
+                            read.readAsDataURL(up.files[0])
+                            read.onload=(e)=>{
+                                request('edituserinfo',{poster:e.target.result},self,(data)=>{
+                                    if(data.state===200){
+                                        self.$message.success('图片上传成功');
+                                        self.upinfo.poster=e.target.result;
+                                        self.isposter=true;
+                                        self.$store.dispatch('getuserinfo');
+                                    }
+                                })
+                            }
                         }
+                        // request('edituserinfo',{poster:up.files[0]},self,(data)=>{
+                        //     if(data.state===200){
+                        //         self.$message.success('图片上传成功');
+                        //         self.upinfo.poster=data.data.poster;
+                        //         self.isposter=true;
+                        //         self.$store.dispatch('getuserinfo');
+                        //     }
+                        // })
                     }; 
                 },false)
             },

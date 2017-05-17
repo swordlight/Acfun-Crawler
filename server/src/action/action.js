@@ -88,6 +88,32 @@ export default{
             }
         })
     },
+    comment(req,res,next){
+        util.checkToken(db,jwt,req,res,next,function(decoded){  //验证token
+            let bid=req.body.bid;
+            let info=req.body.comment;
+            let uid=decoded.uid;
+            db.users.find({'uid':uid},(e,s)=>{
+                if(e){
+                    next(e);
+                }else{
+                    let comment=new db.comments({
+                        bid:bid,
+                        name:s[0].username,
+                        timestamp:Date.now(),
+                        info:info
+                    });
+                    comment.save((e,s)=>{
+                        if(e){
+                            next(e);
+                        }else{
+                            res.status(200).json({state:200,msg:'成功',data:{}});
+                        }
+                    }) 
+                }
+            })
+        });
+    },
     personlist(req,res,next){
         util.checkToken(db,jwt,req,res,next,function(decoded){  //验证token
             var uid=decoded.uid;

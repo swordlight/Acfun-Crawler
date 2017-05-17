@@ -15,6 +15,15 @@
             </div>
         </footer>
         <div class="comments">
+            <div class="comment-top">
+                <el-button type="primary" size="small" @click="clickComment">我要评论</el-button>
+                <div class="article" v-if="isComment">
+                    <el-input type="textarea" :autosize="{ minRows: 6, maxRows: 10}" placeholder="请输入内容" v-model="comment">
+                    </el-input>
+                    <el-button type="danger" size="small" @click="cancel">取消</el-button>
+                    <el-button type="success" size="small" @click="publish">提交</el-button>
+                </div>
+            </div>
             <div v-for="(item,index) in comments" class="comment">
                 <div class="comment_poster">
                     <img src="../../../../assets/img/biaoqing.gif" alt="评论">
@@ -36,7 +45,9 @@
         data(){
             return{
                 blog:{},
-                comments:[]
+                comments:[],
+                comment:'',
+                isComment:false
             }
         },
         mounted(){
@@ -56,6 +67,34 @@
                     })
                 }
             })
+        },
+        methods:{
+            clickComment(){
+                this.isComment=true;
+            },
+            publish(){
+                var self=this;
+                var bid=this.$store.getters.bid;
+                request('comment',{bid:bid,comment:self.comment},self,function(data){
+                    if(data.state===200){
+                        self.$message.success('评论成功');
+                        request('comments',{bid:bid},self,function(data){
+                            if(data.state===200){
+                                self.comments=data.data;
+                                self.comments.forEach(function(e,index){
+                                    if(e.info.indexOf('\n')){
+                                        e.info=e.info.split('\n');                                                                     
+                                    };
+                                })
+                            }
+                        })
+                    }
+                })
+            },
+            cancel(){
+                this.comment='';
+                this.isComment=false;
+            }
         }
     }
 </script>
@@ -113,34 +152,48 @@
             }
         }
     }
-    .comment{
+    .comments{
         border-top:1px solid #ddd;
+        padding-top:20px;
 
-        .comment_poster{
-            float:left;
-            width:80px;
-
-            img{
-                max-height:80px;
+        .comment-top{
+            margin-bottom:20px;
+            .article{
+                text-align:right;
+                margin-bottom:20px;    
+                margin-top:10px;        
             }
         }
-        .comment_info{
-            margin-left:100px;
-            margin-right:180px;
+        .comment{
+            border-top:1px solid #ddd;
 
-            .comment_name{
+            .comment_poster{
+                float:left;
+                width:80px;
+
+                img{
+                    max-height:80px;
+                }
+            }
+            .comment_info{
+                margin-left:100px;
+                margin-right:180px;
+
+                .comment_name{
+                    color:#aaa;
+                    font-size:12px;
+                }
+                .comment_content{
+                    font-size:13px;
+                    margin-left:20px;
+                }
+            }
+            .comment_time{
+                float:right;
                 color:#aaa;
-                font-size:12px;
-            }
-            .comment_content{
                 font-size:13px;
-                margin-left:20px;
             }
-        }
-        .comment_time{
-            float:right;
-            color:#aaa;
-            font-size:13px;
         }
     }
+    
 </style>

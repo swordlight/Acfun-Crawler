@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser'; //加载解析post请求中data中间件
 
 export default (app,express,action)=>{
-    app.use(bodyParser.json());
+    app.use(bodyParser.json({'limit':'5MB'}));
     let router=express.Router();  //路由管理中间件
     router.use(function(req,res,next){  //每个路由都会执行
         next();  //将控制权交给下一个中间件
@@ -25,6 +25,9 @@ export default (app,express,action)=>{
     });
     router.all('/comments',function(req,res,next){  //查看博客评论
         action.comments(req,res,next);
+    });
+    router.all('/comment',function(req,res,next){  //发表博客评论
+        action.comment(req,res,next);
     });
     router.all('/personlist',function(req,res,next){  //查看个人博客
         action.personlist(req,res,next);

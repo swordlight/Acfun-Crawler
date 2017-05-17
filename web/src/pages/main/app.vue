@@ -81,7 +81,7 @@
 
         .header{
             width:100%;
-            height:48px;
+            height:52px;
             border-bottom:1px #FFA5C7 solid;
 
             .top{
@@ -97,6 +97,8 @@
                 .poster{
                     float:right;
                     max-width:50px;
+                    max-height:50px;
+                    border-radius:25px;
                 }
                 .dropdown{
                     float:right;
