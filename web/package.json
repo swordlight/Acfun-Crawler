@@ -1,0 +1,35 @@
+{
+  "name": "acfun-crawler",
+  "version": "1.0.0",
+  "description": "网站用户信息分析",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack --config scripts/webpack.dev.js -w",
+    "build": "webpack --config scripts/webpack.pro.js -p"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zzpzds/Acfun-Crawler.git"
+  },
+  "keywords": [
+    "crawler"
+  ],
+  "author": "zzpzds",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zzpzds/Acfun-Crawler/issues"
+  },
+  "homepage": "https://github.com/zzpzds/Acfun-Crawler#readme",
+  "dependencies": {
+    "css-loader": "^1.0.1",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^2.0.0",
+    "less-loader": "^4.1.0",
+    "style-loader": "^0.23.1",
+    "ts-loader": "^5.3.1",
+    "typescript": "^3.2.1",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2"
+  }
+}
