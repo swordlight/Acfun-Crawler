@@ -1,0 +1,7 @@
+{
+  "mode": "history",
+  "port": "3003",
+  "proxy": "http://127.0.0.1:3005",
+  "local": ["/dist/", "/img/", "/css/", "/js/"],
+  "api": "/api/"
+}

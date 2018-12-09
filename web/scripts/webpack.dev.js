@@ -1,5 +1,6 @@
 const path = require('path')
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const config = {
   mode: 'development', //开发模式
@@ -11,14 +12,14 @@ const config = {
   },
 
   entry: {
-    'index': '../src/index.ts',
+    'index': '../src/index.tsx',
     'vender': '../src/vender.ts'
   },
 
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: '[name].js',
-    publicPath: '../dist'
+    filename: 'js/[name].js',
+    publicPath: '/dist'
   },
 
   module: {
@@ -61,7 +62,12 @@ const config = {
   },
 
   plugins: [
-    new ExtractTextWebpackPlugin('/css/[name].css?v=[hash:6]')
+    new ExtractTextWebpackPlugin('/css/[name].css?v=[hash:6]'),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      chunks: ['vender', 'index'],
+      template: '../src/index.html'
+    })
   ]
 }
 
