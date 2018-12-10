@@ -1,6 +1,7 @@
 import * as React from 'react'
 import {RouteComponentProps, Route, Switch, Redirect} from 'react-router-dom'
 import { Layout, Menu, Icon } from 'antd'
+import UserComponent from './user.component';
 
 const { Header, Sider, Content } = Layout
 
@@ -33,9 +34,7 @@ export default class IndexComponent extends React.Component<RouteComponentProps<
           <Content className="content">
             <Switch>
               <Redirect exact from="/index" to="/index/user" />
-              <Route path="/index/user" render={(match) => {
-                return <span>user</span>
-              }} />
+              <Route path="/index/user" component={UserComponent} />
               <Route path="/index/comment" render={(match) => {
                 return <span>comment</span>
               }} />
