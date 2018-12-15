@@ -3,7 +3,7 @@ const router = require('./router.js')
 
 const app = Http.createServer((req, res) => {
   let ctx = {req, res}
-  router(ctx)
+  router.resolve(ctx)
 })
 
 app.listen(3005, '127.0.0.1', () => {
