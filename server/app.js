@@ -1,7 +1,9 @@
-const http = require('http')
+const Http = require('http')
+const router = require('./router.js')
 
-const app = http.createServer((req, res) => {
-  
+const app = Http.createServer((req, res) => {
+  let ctx = {req, res}
+  router(ctx)
 })
 
 app.listen(3005, '127.0.0.1', () => {
