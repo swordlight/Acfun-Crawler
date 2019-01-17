@@ -1,9 +1,14 @@
 const Http = require('http')
+const loader = require('./loader.js')
 const router = require('./router.js')
 
-const app = Http.createServer((req, res) => {
-  let ctx = {req, res}
-  router.resolve(ctx)
+const routers = router.routers()
+const handle = router.handle
+const app = Http.createServer((request, response) => {
+  let ctx = {request, response}
+  ctx.controllers = loader.controllers
+  ctx.services = loader.services
+  handle(ctx, routers)
 })
 
 app.listen(3005, '127.0.0.1', () => {
