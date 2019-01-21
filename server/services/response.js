@@ -5,6 +5,6 @@ module.exports = () => ({
       'Content-Type': 'application/json'
     })
     response.write(JSON.stringify(data))
-    response.end
+    response.end()
   }
 })
