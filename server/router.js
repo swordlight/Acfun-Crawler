@@ -52,7 +52,7 @@ let specialUrlMath = (ctx, pathname) => {
         response.writeHead(200, {
           'Content-Type': 'image/x-icon'
         })
-        let stream = fs.createReadStream('./public/img/favicon.ico')
+        let stream = fs.createReadStream('./public/img/favicon2.ico')
         let fileData = []
         stream.on('error', (e) => {
           reject(e)
