@@ -1,3 +1,3 @@
 module.exports = () => ({
-  getSexInfo: (controllers) => controllers.user.getSexInfo
+  getSexInfo: (controllers) => controllers.user.getSexInfo,
 })

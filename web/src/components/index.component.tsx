@@ -2,6 +2,7 @@ import * as React from 'react'
 import {RouteComponentProps, Route, Switch, Redirect} from 'react-router-dom'
 import { Layout, Menu, Icon } from 'antd'
 import UserComponent from './user.component';
+import ArticleComponent from './article.component';
 
 const { Header, Sider, Content } = Layout
 
@@ -19,6 +20,10 @@ export default class IndexComponent extends React.Component<RouteComponentProps<
               <Icon type="user" />
               <span>用户概况</span>
             </Menu.Item>
+            <Menu.Item key="article">
+              <Icon type="file-text" />
+              <span>文章汇总</span>
+            </Menu.Item>
             <Menu.Item key="comment">
               <Icon type="message" />
               <span>评论统计</span>
@@ -35,6 +40,7 @@ export default class IndexComponent extends React.Component<RouteComponentProps<
             <Switch>
               <Redirect exact from="/index" to="/index/user" />
               <Route path="/index/user" component={UserComponent} />
+              <Route path="/index/article" component={ArticleComponent} />
               <Route path="/index/comment" render={(match) => {
                 return <span>comment</span>
               }} />

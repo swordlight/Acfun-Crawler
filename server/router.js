@@ -53,7 +53,7 @@ let specialUrlMath = (ctx, pathname) => {
         response.writeHead(200, {
           'Content-Type': 'image/x-icon'
         })
-        let stream = fs.createReadStream('./public/img/favicon1.ico')
+        let stream = fs.createReadStream('./public/img/favicon2.ico')
         let fileData = []
         stream.on('error', (e) => {
           reject(e)
@@ -70,22 +70,17 @@ let specialUrlMath = (ctx, pathname) => {
         return
       case '/zzpzds':
         try {
-          let response = await crawler.getArticleList(1)
-          if (response.statusCode === 200) {
-            result = JSON.parse(response.body)
-            if (result.code === 200) {
-              let articleList = result.data.articleList
-              articleList = JSON.stringify(articleList, null, 2)
-              let articleListBuffer = Buffer.from(articleList)
-              let articleListStream = fs.createWriteStream('./data/article-list.json')
-              articleListStream.on('error', (e) => {
-                reject(e)
-              })
-              articleListStream.write(articleListBuffer)
-              articleListStream.end()
-            }
-          }
-          ctx.services.response.json(ctx, response.body)
+          let articleList = await crawler.getArticleList(10000)
+          articleList = JSON.stringify(articleList, null, 2)
+          let articleListBuffer = Buffer.from(articleList)
+          let articleListStream = fs.createWriteStream('./data/article-list.json')
+          articleListStream.on('error', (e) => {
+            reject(e)
+          })
+          articleListStream.write(articleListBuffer)
+          articleListStream.end()
+
+          ctx.services.response.json(ctx, {articleList})
         } catch(e) {
           reject(e)
         }

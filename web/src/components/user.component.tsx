@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {RouteComponentProps, Route, Switch, Redirect} from 'react-router-dom'
+import {RouteComponentProps} from 'react-router-dom'
 import * as Echarts from 'echarts'
 import { Card } from 'antd';
 

@@ -11,19 +11,40 @@ let getUserList = () => {
 let getArticleList = (amount) => {
   return new Promise((resolve, reject) => {
     amount = amount ? amount : 10000
+    let baseAmount = 100 //每次查询数量
+
+    if (amount <= baseAmount) baseAmount = amount
+    let articleList = []
     let c = new Crawler({
-      jQuery: false
-    })
-    c.queue({
-      uri: `http://webapi.aixifan.com/query/article/list?pageNo=1&size=${amount}&filterTitleImage=false`,
+      jQuery: false,
       callback: (err, res, done) => {
         if(err) {
           reject(err)
         } else {
-          resolve(res)
+          if (res.statusCode === 200) {
+            let body = JSON.parse(res.body)
+            if (body.code === 200) {
+              articleList = articleList.concat(body.data.articleList)
+              console.log(`已爬取：${articleList.length}份文章`)
+              if (articleList.length < amount) {
+                c.queue({
+                  uri: `http://webapi.aixifan.com/query/article/list?pageNo=1&size=${baseAmount}&filterTitleImage=false`
+                })
+              } else {
+                resolve(articleList)
+              }
+            } else {
+              reject('crawler error')
+            }
+          } else {
+            reject('crawler error')
+          }
         }
         done()
       }
+    })
+    c.queue({
+      uri: `http://webapi.aixifan.com/query/article/list?pageNo=1&size=${baseAmount}&filterTitleImage=false`
     })
   })
 }
