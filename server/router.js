@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const url = require('url')
+const crawler = require('./crawler.js')
 
 let routers = () => {
   let routerMap = {}
@@ -45,14 +46,14 @@ let handle = async (ctx, routers) => {
 //special url match
 
 let specialUrlMath = (ctx, pathname) => {
-  let {request, response} = ctx
-  switch (pathname) {
-    case '/favicon.ico':
-      return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    let {request, response} = ctx
+    switch (pathname) {
+      case '/favicon.ico':
         response.writeHead(200, {
           'Content-Type': 'image/x-icon'
         })
-        let stream = fs.createReadStream('./public/img/favicon2.ico')
+        let stream = fs.createReadStream('./public/img/favicon1.ico')
         let fileData = []
         stream.on('error', (e) => {
           reject(e)
@@ -66,12 +67,34 @@ let specialUrlMath = (ctx, pathname) => {
           response.end()
           resolve('end')
         })
-      })
-    default:
-      return new Promise((resolve, reject) => {
+        return
+      case '/zzpzds':
+        try {
+          let response = await crawler.getArticleList(1)
+          if (response.statusCode === 200) {
+            result = JSON.parse(response.body)
+            if (result.code === 200) {
+              let articleList = result.data.articleList
+              articleList = JSON.stringify(articleList, null, 2)
+              let articleListBuffer = Buffer.from(articleList)
+              let articleListStream = fs.createWriteStream('./data/article-list.json')
+              articleListStream.on('error', (e) => {
+                reject(e)
+              })
+              articleListStream.write(articleListBuffer)
+              articleListStream.end()
+            }
+          }
+          ctx.services.response.json(ctx, response.body)
+        } catch(e) {
+          reject(e)
+        }
+        resolve('end')
+        return
+      default:
         resolve('next')
-      })
-  }
+    }
+  })
 }
 
 module.exports = {routers, handle}

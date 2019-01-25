@@ -1,24 +1,34 @@
 const Crawler = require('crawler')
 
-let c = new Crawler()
-
 let getUserList = () => {
   
 }
 
 /**
  * 
- * @param time 最近时间范围 单位天
+ * @param amount 文章数量 最大10000
  */
-let getArticleList = (time) => {
-  c.queue({
-    uri: 'http://webapi.aixifan.com/query/article/list?pageNo=1&size=10000&filterTitleImage=false',
-    callback: (err, res, done) => {
-      if(err) {
-        console.log(err)
-      } else {
-        let articleList
+let getArticleList = (amount) => {
+  return new Promise((resolve, reject) => {
+    amount = amount ? amount : 10000
+    let c = new Crawler({
+      jQuery: false
+    })
+    c.queue({
+      uri: `http://webapi.aixifan.com/query/article/list?pageNo=1&size=${amount}&filterTitleImage=false`,
+      callback: (err, res, done) => {
+        if(err) {
+          reject(err)
+        } else {
+          resolve(res)
+        }
+        done()
       }
-    }
+    })
   })
+}
+
+module.exports = {
+  getUserList,
+  getArticleList
 }

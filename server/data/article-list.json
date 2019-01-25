@@ -1,0 +1,48 @@
+[
+  {
+    "allowed_add_tag": false,
+    "attitudes": [],
+    "banana_count": 0,
+    "big_cover_image": "",
+    "channel_id": 110,
+    "channel_name": "综合",
+    "channel_path": "a",
+    "comment_count": 30,
+    "contribute_time": 1548383350000,
+    "cover_image": "http://cdn.aixifan.com/dotnet/20120923/style/image/cover-day.png",
+    "description": "柏家7岁的大儿子轩轩尚未完成的一幅画济南自杀灭门案：突然毁灭的平常生活本刊记者/杜玮济南市天桥区影",
+    "essense": false,
+    "favorite_count": 5,
+    "id": 4894801,
+    "isSignedUpCollege": false,
+    "latest_active_time": 1548387238000,
+    "latest_comment_time": 1548387238000,
+    "like_count": 0,
+    "link": "",
+    "parent_channel_id": 63,
+    "parent_channel_name": "文章",
+    "parent_realm_id": 0,
+    "realm_id": 5,
+    "realm_name": "杂谈",
+    "recommended": false,
+    "status": 2,
+    "tag_list": [
+      {
+        "id": 32750,
+        "index": 0,
+        "name": "杂谈",
+        "update_time": 1548387230000,
+        "user_id": "4"
+      }
+    ],
+    "title": "济南自杀灭门案：他动手前召集父母妻子及两个幼子",
+    "top_level": false,
+    "tudou_domain": false,
+    "type_id": 1,
+    "user_avatar": "http://cdn.aixifan.com/dotnet/artemis/u/cms/www/201812/28091606mqkmv760.jpg",
+    "user_id": 613552,
+    "username": "Thorny",
+    "view_count": 2679,
+    "view_only": false
+  }
+]
