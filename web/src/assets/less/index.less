@@ -29,6 +29,7 @@ html, body {
     margin: 24px 16px;
     padding: 24px;
     background: #fff;
+    overflow: auto;
   }
 }
 
@@ -58,15 +59,48 @@ html, body {
   height: 100%;
   box-sizing: border-box;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
+  align-items: center;
 
   .proportion-section {
     width: 40%;
     min-width: 500px;
+    margin-bottom: 20px;
     
     #proportion-pie {
       width: 400px;
       height: 400px;
+      margin: auto;
+    }
+  }
+
+  .date-area-section {
+    min-width: 900px;
+    
+    #date-area-line {
+      width: 800px;
+      height: 500px;
+      margin: auto;
+    }
+  }
+}
+
+//comment.component
+.comment-layout {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+
+  .proportion-section {
+    min-width: 1100px;
+    margin: auto;
+    
+    #proportion-bar {
+      width: 1000px;
+      height: 600px;
       margin: auto;
     }
   }

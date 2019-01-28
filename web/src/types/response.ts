@@ -8,3 +8,17 @@ export interface getArticleTypeProportionResponse extends CommonResponse {
     proportion: number
   }[]
 }
+
+export interface getCommentAmountAreaProportionResponse extends CommonResponse {
+  data: {
+    areaList: number[][]
+    amountList: number[]
+  }
+}
+
+export interface getArticleAmountByDateAreaResponse extends CommonResponse {
+  data: {
+    hourList: number[][]
+    amountList: number[]
+  }
+}

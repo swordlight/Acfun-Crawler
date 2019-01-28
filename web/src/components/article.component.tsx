@@ -4,9 +4,9 @@ import * as Echarts from 'echarts'
 import { Card, message } from 'antd';
 
 import server from '../libs/server'
-import { getArticleTypeProportionResponse } from '../types/response';
+import { getArticleTypeProportionResponse, getArticleAmountByDateAreaResponse } from '../types/response';
 import { PieData } from '../types/modules';
-import { getArticleTypeProportionRequest } from '../types/request';
+import { getArticleTypeProportionRequest, getArticleAmountByDateAreaRequest } from '../types/request';
 
 export default class ArticleComponent extends React.Component<RouteComponentProps<any>> {
   render() {
@@ -20,21 +20,33 @@ export default class ArticleComponent extends React.Component<RouteComponentProp
             <div id="proportion-pie" ref={dom => {this.proportionPieDom = dom}}></div>
           </Card>
         </div>
+        <div className="date-area-section">
+          <Card 
+          title="不同时间段文章发稿数"
+          bordered
+          hoverable={true}>
+            <div id="date-area-line" ref={dom => {this.dateAreaLineDom = dom}}></div>
+          </Card>
+        </div>
       </div>
     )
   }
 
   proportionPieDom: HTMLDivElement
-
-  async componentWillMount() {
-  }
+  dateAreaLineDom: HTMLDivElement
 
   async componentDidMount() {
+    this.generateProportionPie()
+    this.generateDateAreaLine()
+  }
+
+  async generateProportionPie() {
+    let proportionData
     try {
       let resData = await server.request<getArticleTypeProportionResponse, getArticleTypeProportionRequest>({
         url: '/api/article/getArticleTypeProportion',
         data: {
-          amount: 10000
+          amount: 20000
         }
       })
       if (resData.stat === 'ok') {
@@ -45,7 +57,7 @@ export default class ArticleComponent extends React.Component<RouteComponentProp
           tempItem.value = item.proportion
           pieData.push(tempItem)
         })
-        this.generateProportionPie(pieData)
+        proportionData = pieData
       } else {
         message.error(resData.stat, 3)
       }
@@ -53,20 +65,62 @@ export default class ArticleComponent extends React.Component<RouteComponentProp
     catch(e) {
       console.log(e)
     }
-  }
 
-  generateProportionPie(proportionData: PieData[]) {
     let proportionPie = Echarts.init(this.proportionPieDom, 'light')
     proportionPie.setOption({
+      tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c}篇 ({d}%)"
+      },
       series : [
         {
           name: '类别占比',
           type: 'pie',
           radius: '55%',
-          data: proportionData,
-          color: ['#FFEBCD', '#87CEFF', '#98F5FF', '#FFD700', '#FFE4E1', '#9AFF9A', '#FF6EB4']
+          data: proportionData
         }
       ]
+    })
+  }
+  async generateDateAreaLine() {
+    let lineData
+    try {
+      let resData = await server.request<getArticleAmountByDateAreaResponse, getArticleAmountByDateAreaRequest>({
+        url: '/api/article/getArticleAmountByDateArea',
+        data: {
+          amount: 20000
+        }
+      })
+      if (resData.stat === 'ok') {
+        lineData = resData.data
+      } else {
+        message.error(resData.stat, 3)
+      }
+    }
+    catch(e) {
+      console.log(e)
+    }
+    console.log(lineData)
+
+    let proportionPie = Echarts.init(this.dateAreaLineDom, 'light')
+    proportionPie.setOption({
+      tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}点 : {c} 篇"
+      },
+      xAxis: {
+        type: 'category',
+        data: lineData.hourList,
+        name: '时间段/小时'
+      },
+      yAxis: {
+        type: 'value',
+        name: '文章发稿数量'
+      },
+      series: [{
+        data: lineData.amountList,
+        type: 'line'
+      }]
     })
   }
 }

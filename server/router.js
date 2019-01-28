@@ -70,7 +70,7 @@ let specialUrlMath = (ctx, pathname) => {
         return
       case '/zzpzds':
         try {
-          let articleList = await crawler.getArticleList(10000)
+          let articleList = await crawler.getArticleList(20000)
           articleList = JSON.stringify(articleList, null, 2)
           let articleListBuffer = Buffer.from(articleList)
           let articleListStream = fs.createWriteStream('./data/article-list.json')

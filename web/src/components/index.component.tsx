@@ -3,6 +3,7 @@ import {RouteComponentProps, Route, Switch, Redirect} from 'react-router-dom'
 import { Layout, Menu, Icon } from 'antd'
 import UserComponent from './user.component';
 import ArticleComponent from './article.component';
+import CommentComponent from './comment.component';
 
 const { Header, Sider, Content } = Layout
 
@@ -41,9 +42,7 @@ export default class IndexComponent extends React.Component<RouteComponentProps<
               <Redirect exact from="/index" to="/index/user" />
               <Route path="/index/user" component={UserComponent} />
               <Route path="/index/article" component={ArticleComponent} />
-              <Route path="/index/comment" render={(match) => {
-                return <span>comment</span>
-              }} />
+              <Route path="/index/comment" component={CommentComponent} />
               <Route path="/index/flow" render={(match) => {
                 return <span>flow</span>
               }} />

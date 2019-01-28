@@ -10,8 +10,8 @@ let getUserList = () => {
  */
 let getArticleList = (amount) => {
   return new Promise((resolve, reject) => {
-    amount = amount ? amount : 10000
-    let baseAmount = 100 //每次查询数量
+    amount = amount ? amount : 20000
+    let baseAmount = 200 //每次查询数量
 
     if (amount <= baseAmount) baseAmount = amount
     let articleList = []
@@ -26,9 +26,9 @@ let getArticleList = (amount) => {
             if (body.code === 200) {
               articleList = articleList.concat(body.data.articleList)
               console.log(`已爬取：${articleList.length}份文章`)
-              if (articleList.length < amount) {
+              if (articleList.length < amount) { //判断已爬取的数量与需要的数量
                 c.queue({
-                  uri: `http://webapi.aixifan.com/query/article/list?pageNo=1&size=${baseAmount}&filterTitleImage=false`
+                  uri: `http://webapi.aixifan.com/query/article/list?pageNo=1&size=${baseAmount}&filterTitleImage=true`
                 })
               } else {
                 resolve(articleList)

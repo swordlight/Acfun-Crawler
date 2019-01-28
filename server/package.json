@@ -14,6 +14,7 @@
   "author": "zzpzds",
   "license": "ISC",
   "dependencies": {
-    "crawler": "^1.2.0"
+    "crawler": "^1.2.0",
+    "moment": "^2.24.0"
   }
 }
