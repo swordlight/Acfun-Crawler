@@ -22,3 +22,10 @@ export interface getArticleAmountByDateAreaResponse extends CommonResponse {
     amountList: number[]
   }
 }
+
+export interface getArticleAmountByBananaResponse extends CommonResponse {
+  data: {
+    areaList: number[][]
+    amountList: number[]
+  }
+}

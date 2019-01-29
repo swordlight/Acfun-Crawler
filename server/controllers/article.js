@@ -61,5 +61,24 @@ module.exports = (services) => ({
       amountList.push(valueMap[key])
     })
     services.response.json(ctx, {stat: 'ok', data: {hourList, amountList}})
+  },
+
+  /**
+   * 香蕉数量区间文章数 
+   */
+  getArticleAmountByBanana: async (ctx) => {
+    let requestData = await services.request.bodyParse(ctx)
+    let articleList = [...allArticleList]
+    if (requestData.amount) {
+      articleList = articleList.slice(0, requestData.amount)
+    }
+    const bananaAmountAreaList = [[0, 4], [5, 9], [10, 19], [20, 39], [40, 59], [60, 79], [80, 99], [100, 1000]]
+    let proportionValueList = (new Array(bananaAmountAreaList.length)).fill(0)
+    for (const article of articleList) {
+      let comment = article.banana_count
+      let areaIndex = bananaAmountAreaList.findIndex(item => (comment >= item[0] && comment <= item[1]))
+      proportionValueList[areaIndex] += 1
+    }
+    services.response.json(ctx, {stat: 'ok', data: {areaList: bananaAmountAreaList, amountList: proportionValueList}})
   }
 }) 

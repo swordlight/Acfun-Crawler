@@ -4,9 +4,9 @@ import * as Echarts from 'echarts'
 import { Card, message } from 'antd';
 
 import server from '../libs/server'
-import { getArticleTypeProportionResponse, getArticleAmountByDateAreaResponse } from '../types/response';
+import { getArticleTypeProportionResponse, getArticleAmountByDateAreaResponse, getArticleAmountByBananaResponse } from '../types/response';
 import { PieData } from '../types/modules';
-import { getArticleTypeProportionRequest, getArticleAmountByDateAreaRequest } from '../types/request';
+import { getArticleTypeProportionRequest, getArticleAmountByDateAreaRequest, getArticleAmountByBananaRequest } from '../types/request';
 
 export default class ArticleComponent extends React.Component<RouteComponentProps<any>> {
   render() {
@@ -28,16 +28,26 @@ export default class ArticleComponent extends React.Component<RouteComponentProp
             <div id="date-area-line" ref={dom => {this.dateAreaLineDom = dom}}></div>
           </Card>
         </div>
+        <div className="banana-section">
+          <Card 
+          title="不同香蕉数量区间的文章数"
+          bordered
+          hoverable={true}>
+            <div id="banana-bar" ref={dom => {this.bananaBarDom = dom}}></div>
+          </Card>
+        </div>
       </div>
     )
   }
 
   proportionPieDom: HTMLDivElement
   dateAreaLineDom: HTMLDivElement
+  bananaBarDom: HTMLDivElement
 
   async componentDidMount() {
     this.generateProportionPie()
     this.generateDateAreaLine()
+    this.generateBananaBar()
   }
 
   async generateProportionPie() {
@@ -121,6 +131,48 @@ export default class ArticleComponent extends React.Component<RouteComponentProp
         data: lineData.amountList,
         type: 'line'
       }]
+    })
+  }
+
+  async generateBananaBar() {
+    let resultData
+    try {
+      let resData = await server.request<getArticleAmountByBananaResponse, getArticleAmountByBananaRequest>({
+        url: '/api/article/getArticleAmountByBanana',
+        data: {
+          amount: 20000
+        }
+      })
+      if (resData.stat === 'ok') {
+        resultData = {xAxis: resData.data.areaList.map(item => `${item[0]}-${item[1]}`), data: resData.data.amountList}
+      } else {
+        message.error(resData.stat, 3)
+      }
+    }
+    catch(e) {
+      console.log(e)
+    }
+
+    let proportionPie = Echarts.init(this.bananaBarDom, 'light', {width: 1000, height: 600})
+    proportionPie.setOption({
+      tooltip : {
+        trigger: 'axis'
+      },
+      xAxis: [{
+        type: 'category',
+        data: resultData.xAxis,
+        name: '香蕉数量',
+      }],
+      yAxis: {
+        type: 'value',
+        name: '文章数量',
+      },
+      series : [
+        {
+          type: 'bar',
+          data: resultData.data
+        }
+      ]
     })
   }
 }

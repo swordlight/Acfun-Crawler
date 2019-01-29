@@ -26,7 +26,12 @@ export default class CommentComponent extends React.Component<RouteComponentProp
 
   proportionBarDom: HTMLDivElement
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.generateProportionPie()  
+  }
+
+  async generateProportionPie() {
+    let resultData
     try {
       let resData = await server.request<getCommentAmountAreaProportionResponse, getCommentAmountAreaProportionRequest>({
         url: '/api/comment/getCommentAmountAreaProportion',
@@ -35,7 +40,7 @@ export default class CommentComponent extends React.Component<RouteComponentProp
         }
       })
       if (resData.stat === 'ok') {
-        this.generateProportionPie({xAxis: resData.data.areaList.map(item => `${item[0]}-${item[1]}`), data: resData.data.amountList})
+        resultData = {xAxis: resData.data.areaList.map(item => `${item[0]}-${item[1]}`), data: resData.data.amountList}
       } else {
         message.error(resData.stat, 3)
       }
@@ -43,9 +48,7 @@ export default class CommentComponent extends React.Component<RouteComponentProp
     catch(e) {
       console.log(e)
     }
-  }
 
-  generateProportionPie(proportionData: BarData) {
     let proportionPie = Echarts.init(this.proportionBarDom, 'light', {width: 1000, height: 600})
     proportionPie.setOption({
       tooltip : {
@@ -53,7 +56,7 @@ export default class CommentComponent extends React.Component<RouteComponentProp
       },
       xAxis: [{
         type: 'category',
-        data: proportionData.xAxis,
+        data: resultData.xAxis,
         name: '评论数量',
       }],
       yAxis: {
@@ -63,7 +66,7 @@ export default class CommentComponent extends React.Component<RouteComponentProp
       series : [
         {
           type: 'bar',
-          data: proportionData.data
+          data: resultData.data
         }
       ]
     })
